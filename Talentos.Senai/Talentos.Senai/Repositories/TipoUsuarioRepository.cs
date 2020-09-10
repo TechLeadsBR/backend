@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Talentos.Senai.Contexts;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 
