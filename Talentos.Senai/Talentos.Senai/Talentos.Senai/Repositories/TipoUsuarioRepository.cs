@@ -10,48 +10,65 @@ namespace Talentos.Senai.Repositories
     {
         TalentosContext ctx = new TalentosContext();
 
-        public List<TipoUsuario> Listar()
-        {
-            return ctx.TipoUsuario.ToList();
-        }
+        public List<TipoUsuario> Listar() => ctx.TipoUsuario.ToList();
+        public TipoUsuario BuscarPorNome(string titulo) => ctx.TipoUsuario.FirstOrDefault(t => t.TituloTipoUsuario == titulo);
 
-        public TipoUsuario BuscarPorNome(string nome)
-        {
-            return ctx.TipoUsuario.FirstOrDefault(t => t.TituloTipoUsuario == nome);
-        }
+        public TipoUsuario BuscarPorId(int id) => ctx.TipoUsuario.FirstOrDefault(t => t.IdTipoUsuario == id);
 
         public string Cadastrar(TipoUsuario data)
         {
-            try
-            {
-                if(data.TituloTipoUsuario != null)
-                {                    
-                    ctx.TipoUsuario.Add(data);
+   
+            if(data.TituloTipoUsuario != null)
+            {                    
+                ctx.TipoUsuario.Add(data);
 
-                    ctx.SaveChanges();
+                ctx.SaveChanges();
 
-                    return $"tipo usuario {data.TituloTipoUsuario} cadastrado com sucesso";
-                }
-                else
-                {
-                    return $"parametro esperado: titulotipousuario";
-                }
-
+                return $"tipo usuario {data.TituloTipoUsuario} cadastrado com sucesso";
             }
-            catch (ArgumentException _)
+            else
             {
-                return $"falha ao cadastrar tipo usuario {data.TituloTipoUsuario}";
+                return $"parametro esperado: titulotipousuario";
             }
         }
 
-        public string Atualizar(TipoUsuario data, int id)
+        public string Atualizar(TipoUsuario tituloNovo, int id)
         {
-            throw new System.NotImplementedException();
+            TipoUsuario tipoUsuariobuscado = BuscarPorId(id);
+
+            if(tipoUsuariobuscado != null && Convert.ToBoolean(id))
+            {
+                tipoUsuariobuscado.TituloTipoUsuario = tituloNovo.TituloTipoUsuario;
+
+                ctx.TipoUsuario.Update(tipoUsuariobuscado);
+
+                ctx.SaveChanges();
+
+                return $"tipo usuario {id} atualizado com sucesso";
+            }
+            else
+            {
+                return "tipo usuario não encontrado";
+            }
+
         }
 
         public string Deletar(int id)
         {
-            throw new System.NotImplementedException();
+            TipoUsuario tipoUsuarioBuscado = BuscarPorId(id);
+
+            if(tipoUsuarioBuscado != null)
+            {
+                ctx.TipoUsuario.Remove(tipoUsuarioBuscado);
+
+                ctx.SaveChanges();
+
+                return $"tipo usuario id:{id} excluido com sucesso";
+            }
+            else
+            {
+                return $"tipo usuario id:{id} não encontrado";
+            }
         }        
     }
 }

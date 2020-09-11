@@ -12,9 +12,11 @@ namespace Talentos.Senai.Interfaces
 
         String Cadastrar(TipoUsuario data);
 
-        TipoUsuario BuscarPorNome(String nome);
+        TipoUsuario BuscarPorNome(String titulo);
 
-        String Atualizar(TipoUsuario data, int id);
+        TipoUsuario BuscarPorId(int id);
+
+        String Atualizar(TipoUsuario tituloNovo, int id);
 
         String Deletar(int id);
     }

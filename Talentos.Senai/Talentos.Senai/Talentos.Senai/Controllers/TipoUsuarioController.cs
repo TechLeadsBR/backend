@@ -16,7 +16,7 @@ namespace Talentos.Senai.Controllers
     public class TipoUsuarioController : ControllerBase
     {
         private ITipoUsuario _tipoUsuarioRepository;
-    
+
         public TipoUsuarioController()
         {
             _tipoUsuarioRepository = new TipoUsuarioRepository();
@@ -31,11 +31,12 @@ namespace Talentos.Senai.Controllers
         [HttpPost]
         public IActionResult Post(TipoUsuario data)
         {
-            TipoUsuario findTipoUsuario = _tipoUsuarioRepository.BuscarPorNome(data.TituloTipoUsuario);
 
-            if(data.TituloTipoUsuario != null)
+            if (data.TituloTipoUsuario != null)
             {
-                if(findTipoUsuario == null)
+                TipoUsuario findTipoUsuario = _tipoUsuarioRepository.BuscarPorNome(data.TituloTipoUsuario);
+
+                if (findTipoUsuario == null)
                 {
                     var response = new
                     {
@@ -59,12 +60,59 @@ namespace Talentos.Senai.Controllers
             {
                 var response = new
                 {
-                    message = $"parametro esperado: titulotipousuario"
+                    message = "parametro esperado: titulotipousuario"
                 };
 
                 return BadRequest(response);
             }
-                
+
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(TipoUsuario tituloNovo, int id)
+        {
+            if (tituloNovo.TituloTipoUsuario != null)
+            {
+                var response = new
+                {
+                    messsage = _tipoUsuarioRepository.Atualizar(tituloNovo, id)
+                };
+
+                return Ok(response);
+
+            }
+            else {
+                var response = new
+                {
+                    message = "parametro esperado: titulotipousuario"
+                };
+
+                return BadRequest(response);
+            }
+
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            if (Convert.ToBoolean(id))
+            {
+                var response = new
+                {
+                    message = _tipoUsuarioRepository.Deletar(id)
+                };
+
+                return Ok(response);
+            }
+            else
+            {
+                var response = new
+                {
+                    message = "parametro esperado: id"
+                };
+
+                return BadRequest(response);
+            }
         }
     }
 }
