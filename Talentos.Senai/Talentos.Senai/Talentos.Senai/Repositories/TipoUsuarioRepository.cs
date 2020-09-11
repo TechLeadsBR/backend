@@ -2,6 +2,7 @@
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Domains;
 using System.Linq;
+using System;
 
 namespace Talentos.Senai.Repositories
 {
@@ -9,19 +10,43 @@ namespace Talentos.Senai.Repositories
     {
         TalentosContext ctx = new TalentosContext();
 
-        public string Atualizar(TipoUsuario data, int id)
+        public List<TipoUsuario> Listar()
         {
-            throw new System.NotImplementedException();
+            return ctx.TipoUsuario.ToList();
+        }
+
+        public TipoUsuario BuscarPorNome(string nome)
+        {
+            return ctx.TipoUsuario.FirstOrDefault(t => t.TituloTipoUsuario == nome);
         }
 
         public string Cadastrar(TipoUsuario data)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                if(data.TituloTipoUsuario != null)
+                {                    
+                    ctx.TipoUsuario.Add(data);
+
+                    ctx.SaveChanges();
+
+                    return $"tipo usuario {data.TituloTipoUsuario} cadastrado com sucesso";
+                }
+                else
+                {
+                    return $"parametro esperado: titulotipousuario";
+                }
+
+            }
+            catch (ArgumentException _)
+            {
+                return $"falha ao cadastrar tipo usuario {data.TituloTipoUsuario}";
+            }
         }
 
-        public List<TipoUsuario> Listar()
+        public string Atualizar(TipoUsuario data, int id)
         {
-            return ctx.TipoUsuario.ToList();
+            throw new System.NotImplementedException();
         }
 
         public string Deletar(int id)
