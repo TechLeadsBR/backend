@@ -16,83 +16,38 @@ namespace Talentos.Senai.Controllers
     public class EmpresaController : ControllerBase
     {
         private IEmpresa _empresaRepository;
-        private General _functions;
+
 
         public EmpresaController()
         {
             _empresaRepository = new EmpresaRepository();
-            _functions = new General();
         }
 
         [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok(_empresaRepository.Listar());
-        }
+        public IActionResult Get() => Ok(_empresaRepository.Listar());
 
         [HttpPost]
         public IActionResult Post(Empresa novoEmpresa)
         {
-            // Faz a chamada para o método
-            bool returnFunction = _empresaRepository.Cadastrar(novoEmpresa);
-
-            if (returnFunction) {
-
-                return Ok(_functions.returnResponse(new
-                {
-                    message = "Empresa cadastrada com sucesso"
-                }));
-            }
-            else
-            {
-                return BadRequest(_functions.returnResponse(new
-                {
-                    message = "Ocorreu algum erro, cnpj ou email já foram cadastrados"
-                }));
-            }
+            TypeMessage returnFunction = _empresaRepository.Cadastrar(novoEmpresa);
+            if (returnFunction.ok) return Ok(returnFunction);
+            else return BadRequest(returnFunction);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            bool deleteEmpresa = _empresaRepository.Deletar(id);
-
-            if (deleteEmpresa)
-            {
-                return Ok(_functions.returnResponse(new
-                {
-                    message = $"empresa Id:{id} deletado"
-                }));
-            }
-            else
-            {
-                 return BadRequest(new
-                {
-                    message = $"empresa Id:{id} não foi deletado"
-                });
-            }
+            TypeMessage deleteEmpresa = _empresaRepository.Deletar(id);
+            if (deleteEmpresa.ok) return Ok(deleteEmpresa);
+            else return BadRequest(deleteEmpresa);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, Empresa empresaAtualizado)
         {
-
-            bool resultUpdate = _empresaRepository.Atualizar(id, empresaAtualizado);
-
-            if (resultUpdate)
-            {                
-                return Ok(new
-                {
-                    message = $"empresa id:{id} atualizada"
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    message = $"empresa id:{id} não atualizada"
-                });
-            }
+            TypeMessage resultUpdate = _empresaRepository.Atualizar(id, empresaAtualizado);
+            if (resultUpdate.ok) return Ok(resultUpdate);
+            else return BadRequest(resultUpdate);
         }
     }
 }

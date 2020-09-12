@@ -13,30 +13,30 @@ namespace Talentos.Senai.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class TipoUsuarioController : ControllerBase
+    public class AlunoController : ControllerBase
     {
-        private ITipoUsuario _tipoUsuarioRepository;
+        private IAluno _alunoRepository;
 
-        public TipoUsuarioController()
+        public AlunoController()
         {
-            _tipoUsuarioRepository = new TipoUsuarioRepository();
+            _alunoRepository = new AlunoRepository();
         }
 
         [HttpGet]
-        public IActionResult Get() => Ok(_tipoUsuarioRepository.Listar());
+        public IActionResult Get() => Ok(_alunoRepository.Listar());
 
         [HttpPost]
-        public IActionResult Post(TipoUsuario data)
+        public IActionResult Post(Aluno data)
         {
-            TypeMessage returnRepository = _tipoUsuarioRepository.Cadastrar(data);
-            if (returnRepository.ok) return Ok(returnRepository);
+            TypeMessage returnRepository = _alunoRepository.Cadastrar(data);
+            if (returnRepository.ok)return Ok(returnRepository);
             else return BadRequest(returnRepository);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(TipoUsuario data, int id)
+        public IActionResult Put(int id, Aluno data)
         {
-            TypeMessage returnRepository = _tipoUsuarioRepository.Atualizar(data, id);
+            TypeMessage returnRepository = _alunoRepository.Atualizar(id, data);
             if (returnRepository.ok) return Ok(returnRepository);
             else return BadRequest(returnRepository);
         }
@@ -44,7 +44,7 @@ namespace Talentos.Senai.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            TypeMessage returnRepository = _tipoUsuarioRepository.Deletar(id);
+            TypeMessage returnRepository = _alunoRepository.Deletar(id);
             if (returnRepository.ok) return Ok(returnRepository);
             else return BadRequest(returnRepository);
         }

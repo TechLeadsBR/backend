@@ -22,7 +22,7 @@ namespace Talentos.Senai.Interfaces
         /// Cadastra uma nova Empresa
         /// </summary>
         /// <param name="novoEmpresa">Objeto novoEmpresa que será cadastrado</param>
-        bool Cadastrar(Empresa novoEmpresa);
+        TypeMessage Cadastrar(Empresa novoEmpresa);
 
         Empresa BuscarPorId(int id);
 
@@ -31,13 +31,13 @@ namespace Talentos.Senai.Interfaces
         /// </summary>
         /// <param name="id">ID da Empresa que será atualizado</param>
         /// <param name="empresaAtualizado">Objeto com as novas informações</param>
-        bool Atualizar(int id, Empresa empresaAtualizado);
+        TypeMessage Atualizar(int id, Empresa empresaAtualizado);
 
         /// <summary>
         /// Deleta uma Empresa existente
         /// </summary>
         /// <param name="id">ID da Empresa que será deletado</param>
-        bool Deletar(int id);
+        TypeMessage Deletar(int id);
 
     }
 }

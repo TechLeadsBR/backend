@@ -4,37 +4,63 @@ using System.Linq;
 using System.Threading.Tasks;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Repositories
 {
     public class EmpresaRepository : IEmpresa
     {
         TalentosContext ctx = new TalentosContext();
-        public bool Atualizar(int id, Empresa empresaAtualizado)
+
+        private General _functions;
+        private string table;
+
+        public EmpresaRepository()
+        {
+            _functions = new General();
+            table = "empresa";
+        }
+
+        public TypeMessage Atualizar(int id, Empresa empresaAtualizado)
         {
             try
             {
                 Empresa empresaParaAtualizar = BuscarPorId(id);
 
-                empresaParaAtualizar.Cnpj = empresaAtualizado.Cnpj != null ? empresaAtualizado.Cnpj : empresaParaAtualizar.Cnpj;
-                empresaParaAtualizar.RazaoSocial = empresaAtualizado.RazaoSocial != null ? empresaAtualizado.RazaoSocial : empresaParaAtualizar.RazaoSocial;
-                empresaParaAtualizar.Email = empresaAtualizado.Email != null ? empresaAtualizado.Email : empresaParaAtualizar.Email;
-                empresaParaAtualizar.Senha = empresaAtualizado.Senha != null ? empresaAtualizado.Senha : empresaParaAtualizar.Senha;
-                empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica != null ? empresaAtualizado.AtividadeEconomica : empresaParaAtualizar.AtividadeEconomica;
-                empresaParaAtualizar.TelefoneDois = empresaAtualizado.TelefoneDois != null ? empresaAtualizado.TelefoneDois : empresaParaAtualizar.TelefoneDois;
-                empresaParaAtualizar.NomeFoto = empresaAtualizado.NomeFoto != null ? empresaAtualizado.NomeFoto : empresaParaAtualizar.NomeFoto;
-                empresaParaAtualizar.IdTipoUsuario = empresaAtualizado.IdTipoUsuario != null ? empresaAtualizado.IdTipoUsuario : empresaParaAtualizar.IdTipoUsuario;
-                empresaParaAtualizar.DescricaoEmpresa = empresaAtualizado.DescricaoEmpresa != null ? empresaAtualizado.DescricaoEmpresa : empresaParaAtualizar.DescricaoEmpresa;
-                empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica != null ? empresaAtualizado.Telefone : empresaParaAtualizar.Telefone;
+                if(empresaParaAtualizar != null)
+                {
+                    empresaParaAtualizar.Cnpj = empresaAtualizado.Cnpj ?? empresaParaAtualizar.Cnpj;
+                    empresaParaAtualizar.RazaoSocial = empresaAtualizado.RazaoSocial ?? empresaParaAtualizar.RazaoSocial;
+                    empresaParaAtualizar.Email = empresaAtualizado.Email ?? empresaParaAtualizar.Email;
+                    empresaParaAtualizar.Senha = empresaAtualizado.Senha ?? empresaParaAtualizar.Senha;
+                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica ?? empresaParaAtualizar.AtividadeEconomica;
+                    empresaParaAtualizar.TelefoneDois = empresaAtualizado.TelefoneDois ?? empresaParaAtualizar.TelefoneDois;
+                    empresaParaAtualizar.NomeFoto = empresaAtualizado.NomeFoto ?? empresaParaAtualizar.NomeFoto;
+                    empresaParaAtualizar.IdTipoUsuario = empresaAtualizado.IdTipoUsuario ?? empresaParaAtualizar.IdTipoUsuario;
+                    empresaParaAtualizar.DescricaoEmpresa = empresaAtualizado.DescricaoEmpresa ?? empresaParaAtualizar.DescricaoEmpresa;
+                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica ?? empresaParaAtualizar.Telefone;
 
-                ctx.Empresa.Update(empresaParaAtualizar);
-                ctx.SaveChanges();
-                return true;
+                    ctx.Empresa.Update(empresaParaAtualizar);
+                    ctx.SaveChanges();
+
+                    string okMessage = _functions.defaultMessage(table, "ok");
+
+                    return _functions.replyObject(okMessage, true);
+                }
+                else
+                {
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
+
+                    return _functions.replyObject(notFoundMessage, false);
+                }
+
             }
             catch(Exception error)
             {
                 Console.WriteLine(error);
-                return false;
+                string errorMessage = _functions.defaultMessage(table, "error");
+
+                return _functions.replyObject(errorMessage, false);
             }
         }
 
@@ -44,22 +70,23 @@ namespace Talentos.Senai.Repositories
         /// Cadastra uma nova Empresa
         /// </summary>
         /// <param name="novoEmpresa">Objeto novoEmpresa que será cadastrada</param>
-        public bool Cadastrar(Empresa novoEmpresa)
+        public TypeMessage Cadastrar(Empresa novoEmpresa)
         {
             Empresa empresaExiste = ctx.Empresa.FirstOrDefault(e => e.Cnpj == novoEmpresa.Cnpj || e.Email == novoEmpresa.Email);
 
             if (empresaExiste == null)
             {
-                // Adiciona este novoEmpresa
                 ctx.Empresa.Add(novoEmpresa);
-
-                // Salva as informações para serem gravadas no banco de dados
                 ctx.SaveChanges();
-                return true;
+
+                string okMessage = _functions.defaultMessage(table, "ok");
+                return _functions.replyObject(okMessage, true);
             }
             else
             {
-                return false;
+                string notFoundMessage= _functions.defaultMessage(table, "existente");
+
+                return _functions.replyObject(notFoundMessage, false);
             }
         }
 
@@ -67,19 +94,31 @@ namespace Talentos.Senai.Repositories
         /// Deletar uma empresa
         /// </summary>
         /// <param name="id">ID da empresa que sera deleada</param>
-        public bool Deletar(int id)
+        public TypeMessage Deletar(int id)
         {
             Empresa empresaBuscado = ctx.Empresa.Find(id);
 
             if (empresaBuscado != null)
             {
-                ctx.Empresa.Remove(empresaBuscado);           
-                ctx.SaveChanges();
-                return true;
+                try
+                {
+                    ctx.Empresa.Remove(empresaBuscado);           
+                    ctx.SaveChanges();
+
+                    string okMessage = _functions.defaultMessage(table, "ok");
+
+                    return _functions.replyObject(okMessage, true);
+                } catch(Exception error)
+                {
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
             }
             else
             {
-                return false;
+                string notFoundMessage = _functions.defaultMessage(table, "notfound");
+
+                return _functions.replyObject(notFoundMessage, false);
             }
         }
 
