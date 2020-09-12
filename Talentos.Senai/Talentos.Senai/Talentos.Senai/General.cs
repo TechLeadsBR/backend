@@ -7,7 +7,7 @@ namespace Talentos.Senai.Utilities
 {
     public class General
     {
-        public TypeMessage returnResponse(string messageReturn, bool okReturn)
+        public TypeMessage replyObject(string messageReturn, bool okReturn)
         {
             return new TypeMessage
             {
@@ -16,18 +16,20 @@ namespace Talentos.Senai.Utilities
             };
         }
 
-        public string defaultMessage(string table, int id, string typeError)
+        public string defaultMessage(string table, string type)
         {
-            if(typeError == "existente" || typeError == "ok" || typeError == "error" || typeError == "notfound")
+            type = type.ToLower();
+
+            if(type == "existente" || type == "ok" || type == "error" || type == "notfound")
             {
-                return typeError == "existente" ? $"{table} já existente, verifique os dados digitados" : 
-                    typeError == "error" ? $"ocorreu um erro no procedimento na tabela {table}" : 
-                    typeError == "ok" ? $"{table} id:{id} procedimento com sucesso!" :
+                return type == "existente" ? $"{table} já existente, verifique os dados digitados" :
+                    type == "error" ? $"ocorreu um erro no procedimento da tabela {table}" :
+                    type == "ok" ? $"{table}  - sucesso no procedimento" :
                     $"{table} não encontrado(a)";
             }
             else
             {
-                return $"parametro esperado: EXISTENTE ou OK ou ERROR";
+                return $"parametro esperado: EXISTENTE ou OK ou ERROR ou NOTFOUND";
             }
 
         }

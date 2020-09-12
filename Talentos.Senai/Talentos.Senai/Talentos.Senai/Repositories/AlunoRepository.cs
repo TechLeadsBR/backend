@@ -28,19 +28,21 @@ namespace Talentos.Senai.Repositories
         public TypeMessage Cadastrar(Aluno data)
         {
             Aluno alunoExistente = ctx.Aluno.FirstOrDefault(a => a.Email == data.Email || a.Rg == data.Rg || a.Cpf == data.Cpf);
+
             if(alunoExistente == null)
             {
                 ctx.Aluno.Add(data);
                 ctx.SaveChanges();
 
-                string okMessage = _functions.defaultMessage(table, data.IdAluno, "ok");
+                string okMessage = _functions.defaultMessage(table, "ok");
 
-                return _functions.returnResponse(okMessage, true);
-            }else
+                return _functions.replyObject(okMessage, true);
+            }
+            else
             {
-                string alunoExists = _functions.defaultMessage(table, data.IdAluno, "existente");
+                string alunoExists = _functions.defaultMessage(table, "existente");
 
-                return _functions.returnResponse(alunoExists, false);
+                return _functions.replyObject(alunoExists, false);
             }
         }
 
@@ -75,13 +77,13 @@ namespace Talentos.Senai.Repositories
                 ctx.Aluno.Update(alunoParaAtualizar);
                 ctx.SaveChanges();
 
-                string okMessage = _functions.defaultMessage(table, id, "ok");
-                return _functions.returnResponse(okMessage, true);
+                string okMessage = _functions.defaultMessage(table, "ok");
+                return _functions.replyObject(okMessage, true);
 
             } else
             {
-                string notFoundMessage = _functions.defaultMessage(table, id, "notfound");
-                return _functions.returnResponse(notFoundMessage, false);
+                string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                return _functions.replyObject(notFoundMessage, false);
             }
         }
 
@@ -91,15 +93,22 @@ namespace Talentos.Senai.Repositories
 
             if(alunoParaDeletar != null)
             {
-                ctx.Aluno.Remove(alunoParaDeletar);
-                ctx.SaveChanges();
+                try
+                {
+                    ctx.Aluno.Remove(alunoParaDeletar);
+                    ctx.SaveChanges();
 
-                string okMessage = _functions.defaultMessage(table, id, "ok");
-                return _functions.returnResponse(okMessage, true);
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+                } catch(Exception error)
+                {
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
             } else
             {
-                string notFoundMessage = _functions.defaultMessage(table, id, "notfound");
-                return _functions.returnResponse(notFoundMessage, false);
+                string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                return _functions.replyObject(notFoundMessage, false);
             }
         }
 

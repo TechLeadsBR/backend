@@ -23,96 +23,30 @@ namespace Talentos.Senai.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok(_tipoUsuarioRepository.Listar());
-        }
+        public IActionResult Get() => Ok(_tipoUsuarioRepository.Listar());
 
         [HttpPost]
         public IActionResult Post(TipoUsuario data)
         {
-
-            if (data.TituloTipoUsuario != null)
-            {
-                TipoUsuario findTipoUsuario = _tipoUsuarioRepository.BuscarPorNome(data.TituloTipoUsuario);
-
-                if (findTipoUsuario == null)
-                {
-                    var response = new
-                    {
-                        message = _tipoUsuarioRepository.Cadastrar(data)
-                    };
-
-                    return Ok(response);
-                }
-                else
-                {
-                    var response = new
-                    {
-                        message = $"titulotipousuario ja existente"
-                    };
-
-                    return BadRequest(response);
-                }
-
-            }
-            else
-            {
-                var response = new
-                {
-                    message = "parametro esperado: titulotipousuario"
-                };
-
-                return BadRequest(response);
-            }
-
+            TypeMessage returnRepository = _tipoUsuarioRepository.Cadastrar(data);
+            if (returnRepository.ok) return Ok(returnRepository);
+            else return BadRequest(returnRepository);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(TipoUsuario tituloNovo, int id)
+        public IActionResult Put(TipoUsuario data, int id)
         {
-            if (tituloNovo.TituloTipoUsuario != null)
-            {
-                var response = new
-                {
-                    messsage = _tipoUsuarioRepository.Atualizar(tituloNovo, id)
-                };
-
-                return Ok(response);
-
-            }
-            else {
-                var response = new
-                {
-                    message = "parametro esperado: titulotipousuario"
-                };
-
-                return BadRequest(response);
-            }
-
+            TypeMessage returnRepository = _tipoUsuarioRepository.Atualizar(data, id);
+            if (returnRepository.ok) return Ok(returnRepository);
+            else return BadRequest(returnRepository);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (Convert.ToBoolean(id))
-            {
-                var response = new
-                {
-                    message = _tipoUsuarioRepository.Deletar(id)
-                };
-
-                return Ok(response);
-            }
-            else
-            {
-                var response = new
-                {
-                    message = "parametro esperado: id"
-                };
-
-                return BadRequest(response);
-            }
+            TypeMessage returnRepository = _tipoUsuarioRepository.Deletar(id);
+            if (returnRepository.ok) return Ok(returnRepository);
+            else return BadRequest(returnRepository);
         }
     }
 }

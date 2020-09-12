@@ -24,55 +24,30 @@ namespace Talentos.Senai.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok(_empresaRepository.Listar());
-        }
+        public IActionResult Get() => Ok(_empresaRepository.Listar());
 
         [HttpPost]
         public IActionResult Post(Empresa novoEmpresa)
         {
             TypeMessage returnFunction = _empresaRepository.Cadastrar(novoEmpresa);
-
-            if (returnFunction.ok) {
-
-                return Ok(returnFunction);
-            }
-            else
-            {
-                return BadRequest(returnFunction);
-            }
+            if (returnFunction.ok) return Ok(returnFunction);
+            else return BadRequest(returnFunction);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             TypeMessage deleteEmpresa = _empresaRepository.Deletar(id);
-
-            if (deleteEmpresa.ok)
-            {
-                return Ok(deleteEmpresa);
-            }
-            else
-            {
-                 return BadRequest(deleteEmpresa);
-            }
+            if (deleteEmpresa.ok) return Ok(deleteEmpresa);
+            else return BadRequest(deleteEmpresa);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, Empresa empresaAtualizado)
         {
-
             TypeMessage resultUpdate = _empresaRepository.Atualizar(id, empresaAtualizado);
-
-            if (resultUpdate.ok)
-            {                
-                return Ok(resultUpdate);
-            }
-            else
-            {
-                return BadRequest(resultUpdate);
-            }
+            if (resultUpdate.ok) return Ok(resultUpdate);
+            else return BadRequest(resultUpdate);
         }
     }
 }

@@ -12,53 +12,55 @@ namespace Talentos.Senai.Repositories
     {
         TalentosContext ctx = new TalentosContext();
 
-        private General _function;
+        private General _functions;
+        private string table;
 
         public EmpresaRepository()
         {
-            _function = new General();
+            _functions = new General();
+            table = "empresa";
         }
 
         public TypeMessage Atualizar(int id, Empresa empresaAtualizado)
         {
-            string table = "empresa";
-
             try
             {
                 Empresa empresaParaAtualizar = BuscarPorId(id);
 
                 if(empresaParaAtualizar != null)
                 {
-                    empresaParaAtualizar.Cnpj = empresaAtualizado.Cnpj != null ? empresaAtualizado.Cnpj : empresaParaAtualizar.Cnpj;
-                    empresaParaAtualizar.RazaoSocial = empresaAtualizado.RazaoSocial != null ? empresaAtualizado.RazaoSocial : empresaParaAtualizar.RazaoSocial;
-                    empresaParaAtualizar.Email = empresaAtualizado.Email != null ? empresaAtualizado.Email : empresaParaAtualizar.Email;
-                    empresaParaAtualizar.Senha = empresaAtualizado.Senha != null ? empresaAtualizado.Senha : empresaParaAtualizar.Senha;
-                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica != null ? empresaAtualizado.AtividadeEconomica : empresaParaAtualizar.AtividadeEconomica;
-                    empresaParaAtualizar.TelefoneDois = empresaAtualizado.TelefoneDois != null ? empresaAtualizado.TelefoneDois : empresaParaAtualizar.TelefoneDois;
-                    empresaParaAtualizar.NomeFoto = empresaAtualizado.NomeFoto != null ? empresaAtualizado.NomeFoto : empresaParaAtualizar.NomeFoto;
-                    empresaParaAtualizar.IdTipoUsuario = empresaAtualizado.IdTipoUsuario != null ? empresaAtualizado.IdTipoUsuario : empresaParaAtualizar.IdTipoUsuario;
-                    empresaParaAtualizar.DescricaoEmpresa = empresaAtualizado.DescricaoEmpresa != null ? empresaAtualizado.DescricaoEmpresa : empresaParaAtualizar.DescricaoEmpresa;
-                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica != null ? empresaAtualizado.Telefone : empresaParaAtualizar.Telefone;
+                    empresaParaAtualizar.Cnpj = empresaAtualizado.Cnpj ?? empresaParaAtualizar.Cnpj;
+                    empresaParaAtualizar.RazaoSocial = empresaAtualizado.RazaoSocial ?? empresaParaAtualizar.RazaoSocial;
+                    empresaParaAtualizar.Email = empresaAtualizado.Email ?? empresaParaAtualizar.Email;
+                    empresaParaAtualizar.Senha = empresaAtualizado.Senha ?? empresaParaAtualizar.Senha;
+                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica ?? empresaParaAtualizar.AtividadeEconomica;
+                    empresaParaAtualizar.TelefoneDois = empresaAtualizado.TelefoneDois ?? empresaParaAtualizar.TelefoneDois;
+                    empresaParaAtualizar.NomeFoto = empresaAtualizado.NomeFoto ?? empresaParaAtualizar.NomeFoto;
+                    empresaParaAtualizar.IdTipoUsuario = empresaAtualizado.IdTipoUsuario ?? empresaParaAtualizar.IdTipoUsuario;
+                    empresaParaAtualizar.DescricaoEmpresa = empresaAtualizado.DescricaoEmpresa ?? empresaParaAtualizar.DescricaoEmpresa;
+                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica ?? empresaParaAtualizar.Telefone;
 
                     ctx.Empresa.Update(empresaParaAtualizar);
                     ctx.SaveChanges();
 
-                    string okMessage = _function.defaultMessage(table, id, "ok");
+                    string okMessage = _functions.defaultMessage(table, "ok");
 
-                    return _function.returnResponse(okMessage, true);
-                }else
+                    return _functions.replyObject(okMessage, true);
+                }
+                else
                 {
-                    string notFoundMessage = _function.defaultMessage(table, id, "notfound");
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
 
-                    return _function.returnResponse(notFoundMessage, false);
+                    return _functions.replyObject(notFoundMessage, false);
                 }
 
             }
             catch(Exception error)
             {
-                string errorMessage = _function.defaultMessage(table, id, "error");
+                Console.WriteLine(error);
+                string errorMessage = _functions.defaultMessage(table, "error");
 
-                return _function.returnResponse(errorMessage, false);
+                return _functions.replyObject(errorMessage, false);
             }
         }
 
@@ -70,25 +72,21 @@ namespace Talentos.Senai.Repositories
         /// <param name="novoEmpresa">Objeto novoEmpresa que será cadastrada</param>
         public TypeMessage Cadastrar(Empresa novoEmpresa)
         {
-            string table = "empresa";
-            int id = novoEmpresa.IdEmpresa;
-
             Empresa empresaExiste = ctx.Empresa.FirstOrDefault(e => e.Cnpj == novoEmpresa.Cnpj || e.Email == novoEmpresa.Email);
 
             if (empresaExiste == null)
             {
                 ctx.Empresa.Add(novoEmpresa);
-
                 ctx.SaveChanges();
 
-                string okMessage = _function.defaultMessage(table, id, "ok");
-                return _function.returnResponse(okMessage, true);
+                string okMessage = _functions.defaultMessage(table, "ok");
+                return _functions.replyObject(okMessage, true);
             }
             else
             {
-                string notFoundMessage= _function.defaultMessage(table, id, "notfound");
+                string notFoundMessage= _functions.defaultMessage(table, "existente");
 
-                return _function.returnResponse(notFoundMessage, false);
+                return _functions.replyObject(notFoundMessage, false);
             }
         }
 
@@ -99,22 +97,28 @@ namespace Talentos.Senai.Repositories
         public TypeMessage Deletar(int id)
         {
             Empresa empresaBuscado = ctx.Empresa.Find(id);
-            string table = "empresa";
 
             if (empresaBuscado != null)
             {
-                ctx.Empresa.Remove(empresaBuscado);           
-                ctx.SaveChanges();
+                try
+                {
+                    ctx.Empresa.Remove(empresaBuscado);           
+                    ctx.SaveChanges();
 
-                string okMessage = _function.defaultMessage(table, id, "ok");
+                    string okMessage = _functions.defaultMessage(table, "ok");
 
-                return _function.returnResponse(okMessage, true);
+                    return _functions.replyObject(okMessage, true);
+                } catch(Exception error)
+                {
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
             }
             else
             {
-                string notFoundMessage = _function.defaultMessage(table, id, "notfound");
+                string notFoundMessage = _functions.defaultMessage(table, "notfound");
 
-                return _function.returnResponse(notFoundMessage, false);
+                return _functions.replyObject(notFoundMessage, false);
             }
         }
 

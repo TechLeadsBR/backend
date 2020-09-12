@@ -29,31 +29,24 @@ namespace Talentos.Senai.Controllers
         public IActionResult Post(Aluno data)
         {
             TypeMessage returnRepository = _alunoRepository.Cadastrar(data);
-
-            if (returnRepository.ok)
-            {
-                return Ok(returnRepository);
-            } else
-            {
-                return BadRequest(returnRepository);
-            }
+            if (returnRepository.ok)return Ok(returnRepository);
+            else return BadRequest(returnRepository);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno data)
         {
             TypeMessage returnRepository = _alunoRepository.Atualizar(id, data);
-
-            if (returnRepository.ok)
-            {
-                return Ok(returnRepository);
-            }else
-            {
-                return BadRequest(returnRepository);
-            }
+            if (returnRepository.ok) return Ok(returnRepository);
+            else return BadRequest(returnRepository);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id) 
+        public IActionResult Delete(int id)
+        {
+            TypeMessage returnRepository = _alunoRepository.Deletar(id);
+            if (returnRepository.ok) return Ok(returnRepository);
+            else return BadRequest(returnRepository);
+        }
     }
 }

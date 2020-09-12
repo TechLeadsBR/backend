@@ -9,15 +9,14 @@ namespace Talentos.Senai.Interfaces
     interface ITipoUsuario
     {
         List<TipoUsuario> Listar();
-
-        String Cadastrar(TipoUsuario data);
-
         TipoUsuario BuscarPorNome(String titulo);
 
         TipoUsuario BuscarPorId(int id);
 
-        String Atualizar(TipoUsuario tituloNovo, int id);
+        TypeMessage Cadastrar(TipoUsuario data);
+        
+        TypeMessage Atualizar(TipoUsuario tituloNovo, int id);
 
-        String Deletar(int id);
+        TypeMessage Deletar(int id);
     }
 }
