@@ -32,7 +32,6 @@ namespace Talentos.Senai.Controllers
         [HttpPost]
         public IActionResult Post(Empresa novoEmpresa)
         {
-            // Faz a chamada para o método
             TypeMessage returnFunction = _empresaRepository.Cadastrar(novoEmpresa);
 
             if (returnFunction.ok) {

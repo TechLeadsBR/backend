@@ -16,12 +16,14 @@ namespace Talentos.Senai.Utilities
             };
         }
 
-        public string defaultMessage(string tabel, int id, string typeError)
+        public string defaultMessage(string table, int id, string typeError)
         {
-            if(typeError == "existente" || typeError == "ok" || typeError == "error")
+            if(typeError == "existente" || typeError == "ok" || typeError == "error" || typeError == "notfound")
             {
-                return typeError == "existente" ? $"{tabel} já existente, verifique os dados digitados" : 
-                    typeError == "error" ? $"ocorreu um erro ao cadastrar {tabel}" : $"{tabel} id:{id} prodecimento com sucesso!";
+                return typeError == "existente" ? $"{table} já existente, verifique os dados digitados" : 
+                    typeError == "error" ? $"ocorreu um erro no procedimento na tabela {table}" : 
+                    typeError == "ok" ? $"{table} id:{id} procedimento com sucesso!" :
+                    $"{table} não encontrado(a)";
             }
             else
             {

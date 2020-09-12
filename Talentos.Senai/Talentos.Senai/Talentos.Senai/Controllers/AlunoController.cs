@@ -38,5 +38,22 @@ namespace Talentos.Senai.Controllers
                 return BadRequest(returnRepository);
             }
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Aluno data)
+        {
+            TypeMessage returnRepository = _alunoRepository.Atualizar(id, data);
+
+            if (returnRepository.ok)
+            {
+                return Ok(returnRepository);
+            }else
+            {
+                return BadRequest(returnRepository);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id) 
     }
 }

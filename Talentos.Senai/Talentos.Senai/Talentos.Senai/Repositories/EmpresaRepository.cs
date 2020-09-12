@@ -27,23 +27,32 @@ namespace Talentos.Senai.Repositories
             {
                 Empresa empresaParaAtualizar = BuscarPorId(id);
 
-                empresaParaAtualizar.Cnpj = empresaAtualizado.Cnpj != null ? empresaAtualizado.Cnpj : empresaParaAtualizar.Cnpj;
-                empresaParaAtualizar.RazaoSocial = empresaAtualizado.RazaoSocial != null ? empresaAtualizado.RazaoSocial : empresaParaAtualizar.RazaoSocial;
-                empresaParaAtualizar.Email = empresaAtualizado.Email != null ? empresaAtualizado.Email : empresaParaAtualizar.Email;
-                empresaParaAtualizar.Senha = empresaAtualizado.Senha != null ? empresaAtualizado.Senha : empresaParaAtualizar.Senha;
-                empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica != null ? empresaAtualizado.AtividadeEconomica : empresaParaAtualizar.AtividadeEconomica;
-                empresaParaAtualizar.TelefoneDois = empresaAtualizado.TelefoneDois != null ? empresaAtualizado.TelefoneDois : empresaParaAtualizar.TelefoneDois;
-                empresaParaAtualizar.NomeFoto = empresaAtualizado.NomeFoto != null ? empresaAtualizado.NomeFoto : empresaParaAtualizar.NomeFoto;
-                empresaParaAtualizar.IdTipoUsuario = empresaAtualizado.IdTipoUsuario != null ? empresaAtualizado.IdTipoUsuario : empresaParaAtualizar.IdTipoUsuario;
-                empresaParaAtualizar.DescricaoEmpresa = empresaAtualizado.DescricaoEmpresa != null ? empresaAtualizado.DescricaoEmpresa : empresaParaAtualizar.DescricaoEmpresa;
-                empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica != null ? empresaAtualizado.Telefone : empresaParaAtualizar.Telefone;
+                if(empresaParaAtualizar != null)
+                {
+                    empresaParaAtualizar.Cnpj = empresaAtualizado.Cnpj != null ? empresaAtualizado.Cnpj : empresaParaAtualizar.Cnpj;
+                    empresaParaAtualizar.RazaoSocial = empresaAtualizado.RazaoSocial != null ? empresaAtualizado.RazaoSocial : empresaParaAtualizar.RazaoSocial;
+                    empresaParaAtualizar.Email = empresaAtualizado.Email != null ? empresaAtualizado.Email : empresaParaAtualizar.Email;
+                    empresaParaAtualizar.Senha = empresaAtualizado.Senha != null ? empresaAtualizado.Senha : empresaParaAtualizar.Senha;
+                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica != null ? empresaAtualizado.AtividadeEconomica : empresaParaAtualizar.AtividadeEconomica;
+                    empresaParaAtualizar.TelefoneDois = empresaAtualizado.TelefoneDois != null ? empresaAtualizado.TelefoneDois : empresaParaAtualizar.TelefoneDois;
+                    empresaParaAtualizar.NomeFoto = empresaAtualizado.NomeFoto != null ? empresaAtualizado.NomeFoto : empresaParaAtualizar.NomeFoto;
+                    empresaParaAtualizar.IdTipoUsuario = empresaAtualizado.IdTipoUsuario != null ? empresaAtualizado.IdTipoUsuario : empresaParaAtualizar.IdTipoUsuario;
+                    empresaParaAtualizar.DescricaoEmpresa = empresaAtualizado.DescricaoEmpresa != null ? empresaAtualizado.DescricaoEmpresa : empresaParaAtualizar.DescricaoEmpresa;
+                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica != null ? empresaAtualizado.Telefone : empresaParaAtualizar.Telefone;
 
-                ctx.Empresa.Update(empresaParaAtualizar);
-                ctx.SaveChanges();
+                    ctx.Empresa.Update(empresaParaAtualizar);
+                    ctx.SaveChanges();
 
-                string okMessage = _function.defaultMessage(table, id, "ok");
+                    string okMessage = _function.defaultMessage(table, id, "ok");
 
-                return _function.returnResponse(okMessage, true);
+                    return _function.returnResponse(okMessage, true);
+                }else
+                {
+                    string notFoundMessage = _function.defaultMessage(table, id, "notfound");
+
+                    return _function.returnResponse(notFoundMessage, false);
+                }
+
             }
             catch(Exception error)
             {
@@ -77,9 +86,9 @@ namespace Talentos.Senai.Repositories
             }
             else
             {
-                string existsMessage = _function.defaultMessage(table, id, "existente");
+                string notFoundMessage= _function.defaultMessage(table, id, "notfound");
 
-                return _function.returnResponse(existsMessage, false);
+                return _function.returnResponse(notFoundMessage, false);
             }
         }
 
@@ -103,9 +112,9 @@ namespace Talentos.Senai.Repositories
             }
             else
             {
-                string errorMessage = _function.defaultMessage(table, id, "error");
+                string notFoundMessage = _function.defaultMessage(table, id, "notfound");
 
-                return _function.returnResponse(errorMessage, false);
+                return _function.returnResponse(notFoundMessage, false);
             }
         }
 
