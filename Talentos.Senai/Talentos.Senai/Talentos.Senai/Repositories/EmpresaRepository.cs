@@ -4,14 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Repositories
 {
     public class EmpresaRepository : IEmpresa
     {
         TalentosContext ctx = new TalentosContext();
-        public bool Atualizar(int id, Empresa empresaAtualizado)
+
+        private General _function;
+
+        public EmpresaRepository()
         {
+            _function = new General();
+        }
+
+        public TypeMessage Atualizar(int id, Empresa empresaAtualizado)
+        {
+            string table = "empresa";
+
             try
             {
                 Empresa empresaParaAtualizar = BuscarPorId(id);
@@ -29,12 +40,16 @@ namespace Talentos.Senai.Repositories
 
                 ctx.Empresa.Update(empresaParaAtualizar);
                 ctx.SaveChanges();
-                return true;
+
+                string okMessage = _function.defaultMessage(table, id, "ok");
+
+                return _function.returnResponse(okMessage, true);
             }
             catch(Exception error)
             {
-                Console.WriteLine(error);
-                return false;
+                string errorMessage = _function.defaultMessage(table, id, "error");
+
+                return _function.returnResponse(errorMessage, false);
             }
         }
 
@@ -44,22 +59,27 @@ namespace Talentos.Senai.Repositories
         /// Cadastra uma nova Empresa
         /// </summary>
         /// <param name="novoEmpresa">Objeto novoEmpresa que será cadastrada</param>
-        public bool Cadastrar(Empresa novoEmpresa)
+        public TypeMessage Cadastrar(Empresa novoEmpresa)
         {
+            string table = "empresa";
+            int id = novoEmpresa.IdEmpresa;
+
             Empresa empresaExiste = ctx.Empresa.FirstOrDefault(e => e.Cnpj == novoEmpresa.Cnpj || e.Email == novoEmpresa.Email);
 
             if (empresaExiste == null)
             {
-                // Adiciona este novoEmpresa
                 ctx.Empresa.Add(novoEmpresa);
 
-                // Salva as informações para serem gravadas no banco de dados
                 ctx.SaveChanges();
-                return true;
+
+                string okMessage = _function.defaultMessage(table, id, "ok");
+                return _function.returnResponse(okMessage, true);
             }
             else
             {
-                return false;
+                string existsMessage = _function.defaultMessage(table, id, "existente");
+
+                return _function.returnResponse(existsMessage, false);
             }
         }
 
@@ -67,19 +87,25 @@ namespace Talentos.Senai.Repositories
         /// Deletar uma empresa
         /// </summary>
         /// <param name="id">ID da empresa que sera deleada</param>
-        public bool Deletar(int id)
+        public TypeMessage Deletar(int id)
         {
             Empresa empresaBuscado = ctx.Empresa.Find(id);
+            string table = "empresa";
 
             if (empresaBuscado != null)
             {
                 ctx.Empresa.Remove(empresaBuscado);           
                 ctx.SaveChanges();
-                return true;
+
+                string okMessage = _function.defaultMessage(table, id, "ok");
+
+                return _function.returnResponse(okMessage, true);
             }
             else
             {
-                return false;
+                string errorMessage = _function.defaultMessage(table, id, "error");
+
+                return _function.returnResponse(errorMessage, false);
             }
         }
 

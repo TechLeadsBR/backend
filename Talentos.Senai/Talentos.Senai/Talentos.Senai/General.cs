@@ -7,12 +7,27 @@ namespace Talentos.Senai.Utilities
 {
     public class General
     {
-        public object returnResponse(object objectForReturn)
+        public TypeMessage returnResponse(string messageReturn, bool okReturn)
         {
-            return new
+            return new TypeMessage
             {
-                objectForReturn
+                message = messageReturn,
+                ok = okReturn
             };
+        }
+
+        public string defaultMessage(string tabel, int id, string typeError)
+        {
+            if(typeError == "existente" || typeError == "ok" || typeError == "error")
+            {
+                return typeError == "existente" ? $"{tabel} já existente, verifique os dados digitados" : 
+                    typeError == "error" ? $"ocorreu um erro ao cadastrar {tabel}" : $"{tabel} id:{id} prodecimento com sucesso!";
+            }
+            else
+            {
+                return $"parametro esperado: EXISTENTE ou OK ou ERROR";
+            }
+
         }
     }
 }
