@@ -12,6 +12,8 @@ namespace Talentos.Senai.Interfaces
 
         Administrador BuscarPorId(int id);
 
+        Administrador BuscarPorEmaileCpf(string email, string cpf);
+
         TypeMessage Cadastrar(Administrador data);
 
         TypeMessage Atualizar(int id, Administrador data);

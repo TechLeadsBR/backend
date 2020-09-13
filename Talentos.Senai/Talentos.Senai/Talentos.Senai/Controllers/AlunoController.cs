@@ -29,7 +29,7 @@ namespace Talentos.Senai.Controllers
         public IActionResult Post(Aluno data)
         {
             TypeMessage returnRepository = _alunoRepository.Cadastrar(data);
-            if (returnRepository.ok)return Ok(returnRepository);
+            if (returnRepository.ok) return StatusCode(201, returnRepository);
             else return BadRequest(returnRepository);
         }
 

@@ -30,17 +30,24 @@ namespace Talentos.Senai.Repositories
             TipoUsuario tipoUsuarioBuscado = BuscarPorNome(data.TituloTipoUsuario);
 
             if(tipoUsuarioBuscado == null)
-            {                    
-                ctx.TipoUsuario.Add(data);
-                ctx.SaveChanges();
+            {     
+                try
+                {
+                    ctx.TipoUsuario.Add(data);
+                    ctx.SaveChanges();
 
-                string okMessage = _functions.defaultMessage(table, "ok");
-
-                return _functions.replyObject(okMessage, true);
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+                } catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
             }
             else
             {
-                string existsMesssage = _functions.defaultMessage(table, "existente");
+                string existsMesssage = _functions.defaultMessage(table, "exists");
 
                 return _functions.replyObject(existsMesssage, false);
             }
@@ -52,13 +59,20 @@ namespace Talentos.Senai.Repositories
 
             if(tipoUsuariobuscado != null)
             {
-                tipoUsuariobuscado.TituloTipoUsuario = tituloNovo.TituloTipoUsuario;
-                ctx.TipoUsuario.Update(tipoUsuariobuscado);
-                ctx.SaveChanges();
+                try
+                {
+                    tipoUsuariobuscado.TituloTipoUsuario = tituloNovo.TituloTipoUsuario;
+                    ctx.TipoUsuario.Update(tipoUsuariobuscado);
+                    ctx.SaveChanges();
 
-                string okMessage = _functions.defaultMessage(table, "ok");
-
-                return _functions.replyObject(okMessage, true);
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+                }catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
             }
             else
             {
@@ -83,6 +97,7 @@ namespace Talentos.Senai.Repositories
                     return _functions.replyObject(okMessage, true);
                 } catch(Exception error)
                 {
+                    Console.WriteLine(error);
                     string errorMessage = _functions.defaultMessage(table, "error");
                     return _functions.replyObject(errorMessage, false);
                 }
