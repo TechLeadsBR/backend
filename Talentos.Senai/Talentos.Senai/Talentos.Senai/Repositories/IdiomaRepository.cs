@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Talentos.Senai.Repositories
         private readonly string table = "idioma";
         private readonly AlunoRepository _alunoRepository = new AlunoRepository();
 
-        public List<Idioma> Listar() => ctx.Idioma.ToList();
+        public List<Idioma> Listar() => ctx.Idioma.Include(i => i.IdAlunoNavigation).ToList();
 
         public Idioma BuscarPorId(int id) => ctx.Idioma.FirstOrDefault(i => i.IdIdioma == id);
 

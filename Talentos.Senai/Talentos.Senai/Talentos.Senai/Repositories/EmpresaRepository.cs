@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -122,6 +123,6 @@ namespace Talentos.Senai.Repositories
             }
         }
 
-        public List<Empresa> Listar() => ctx.Empresa.ToList();
+        public List<Empresa> Listar() => ctx.Empresa.Include(e => e.IdTipoUsuarioNavigation).ToList();
     }
 }
