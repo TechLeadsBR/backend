@@ -12,7 +12,7 @@ namespace Talentos.Senai.Repositories
     public class EmpresaRepository : IEmpresa
     {
         private TalentosContext ctx = new TalentosContext();
-        private readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly Functions _functions = new Functions();
         private readonly string table = "empresa";
 
         public TypeMessage Atualizar(int id, Empresa empresaAtualizado)

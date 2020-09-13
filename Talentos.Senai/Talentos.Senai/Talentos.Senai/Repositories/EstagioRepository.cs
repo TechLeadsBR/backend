@@ -12,7 +12,7 @@ namespace Talentos.Senai.Repositories
     public class EstagioRepository : IEstagio
     {
         private TalentosContext ctx = new TalentosContext();
-        private readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly Functions _functions = new Functions();
         private readonly string table = "estagio";
 
         public List<Estagio> Listar() => ctx.Estagio.Include(e => e.IdAlunoNavigation).Include(e => e.IdEmpresaNavigation).ToList();

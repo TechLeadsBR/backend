@@ -12,7 +12,7 @@ namespace Talentos.Senai.Repositories
     public class AlunoRepository : IAluno
     {
         private TalentosContext ctx = new TalentosContext();
-        private readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly Functions _functions = new Functions();
         private readonly string table = "aluno";
 
         public List<Aluno> Listar() => ctx.Aluno.Include(a => a.IdEnderecoNavigation).Include(a => a.IdTipoUsuarioNavigation).ToList();

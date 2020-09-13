@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Talentos.Senai.Utilities
 {
-    public class FunctionsGeneral
+    public class Functions
     {
         public TypeMessage replyObject(string messageReturn, bool okReturn)
         {
