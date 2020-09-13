@@ -1,39 +1,41 @@
-﻿using System.Collections.Generic;
-using Talentos.Senai.Interfaces;
-using Talentos.Senai.Domains;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System;
+using System.Threading.Tasks;
+using Talentos.Senai.Domains;
+using Talentos.Senai.Interfaces;
 using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Repositories
 {
-    public class TipoUsuarioRepository : ITipoUsuario
+    public class AdministradorRepository : IAdministrador
     {
         TalentosContext ctx = new TalentosContext();
 
-        public General _functions;
         private string table;
+        private General _functions;
 
-        public TipoUsuarioRepository()
+        public AdministradorRepository()
         {
             _functions = new General();
-            table = "tipousuario";
+            table = "administrador";
         }
 
-        public List<TipoUsuario> Listar() => ctx.TipoUsuario.ToList();
-        public TipoUsuario BuscarPorNome(string titulo) => ctx.TipoUsuario.FirstOrDefault(t => t.TituloTipoUsuario == titulo);
+        public List<Administrador> Listar() => ctx.Administrador.ToList();
 
-        public TipoUsuario BuscarPorId(int id) => ctx.TipoUsuario.FirstOrDefault(t => t.IdTipoUsuario == id);
+        public Administrador BuscarPorId(int id) => ctx.Administrador.FirstOrDefault(a => a.IdAdministrador == id);
 
-        public TypeMessage Cadastrar(TipoUsuario data)
+        public Administrador BuscarPorEmaileCpf(string email, string cpf) => ctx.Administrador.FirstOrDefault(a => a.Email == email || a.Cpf == cpf);
+
+        public TypeMessage Cadastrar(Administrador data)
         {
-            TipoUsuario tipoUsuarioBuscado = BuscarPorNome(data.TituloTipoUsuario);
+            Administrador administradorBuscado = BuscarPorEmaileCpf(data.Email, data.Cpf);
 
-            if(tipoUsuarioBuscado == null)
-            {     
+            if(administradorBuscado == null)
+            {
                 try
                 {
-                    ctx.TipoUsuario.Add(data);
+                    ctx.Administrador.Add(data);
                     ctx.SaveChanges();
 
                     string okMessage = _functions.defaultMessage(table, "ok");
@@ -47,27 +49,31 @@ namespace Talentos.Senai.Repositories
             }
             else
             {
-                string existsMesssage = _functions.defaultMessage(table, "exists");
-
-                return _functions.replyObject(existsMesssage, false);
+                string existsMessage = _functions.defaultMessage(table, "exists");
+                return _functions.replyObject(existsMessage, false);
             }
         }
 
-        public TypeMessage Atualizar(TipoUsuario tituloNovo, int id)
+        public TypeMessage Atualizar(int id, Administrador data)
         {
-            TipoUsuario tipoUsuariobuscado = BuscarPorId(id);
+            Administrador administradorBuscado = BuscarPorId(id);
 
-            if(tipoUsuariobuscado != null)
+            if(administradorBuscado != null)
             {
                 try
                 {
-                    tipoUsuariobuscado.TituloTipoUsuario = tituloNovo.TituloTipoUsuario;
-                    ctx.TipoUsuario.Update(tipoUsuariobuscado);
+                    administradorBuscado.Nome = data.Nome ?? administradorBuscado.Nome;
+                    administradorBuscado.Email = data.Email ?? administradorBuscado.Email;
+                    administradorBuscado.Senha = data.Senha ?? administradorBuscado.Senha;
+                    administradorBuscado.Cpf = data.Cpf ?? administradorBuscado.Cpf;
+                    administradorBuscado.IdTipoUsuario = data.IdTipoUsuario ?? administradorBuscado.IdTipoUsuario;
+
+                    ctx.Administrador.Update(administradorBuscado);
                     ctx.SaveChanges();
 
                     string okMessage = _functions.defaultMessage(table, "ok");
                     return _functions.replyObject(okMessage, true);
-                }catch(Exception error)
+                } catch(Exception error)
                 {
                     Console.WriteLine(error);
                     string errorMessage = _functions.defaultMessage(table, "error");
@@ -79,23 +85,21 @@ namespace Talentos.Senai.Repositories
                 string notFoundMessage = _functions.defaultMessage(table, "notfound");
                 return _functions.replyObject(notFoundMessage, false);
             }
-
         }
 
         public TypeMessage Deletar(int id)
         {
-            TipoUsuario tipoUsuarioBuscado = BuscarPorId(id);
+            Administrador administradorBuscado = BuscarPorId(id);
 
-            if(tipoUsuarioBuscado != null)
+            if(administradorBuscado != null)
             {
                 try
                 {
-                    ctx.TipoUsuario.Remove(tipoUsuarioBuscado);
+                    ctx.Administrador.Remove(administradorBuscado);
                     ctx.SaveChanges();
-
                     string okMessage = _functions.defaultMessage(table, "ok");
                     return _functions.replyObject(okMessage, true);
-                } catch(Exception error)
+                }catch (Exception error)
                 {
                     Console.WriteLine(error);
                     string errorMessage = _functions.defaultMessage(table, "error");
@@ -107,6 +111,6 @@ namespace Talentos.Senai.Repositories
                 string notFoundMessage = _functions.defaultMessage(table, "notfound");
                 return _functions.replyObject(notFoundMessage, false);
             }
-        }        
+        }
     }
 }

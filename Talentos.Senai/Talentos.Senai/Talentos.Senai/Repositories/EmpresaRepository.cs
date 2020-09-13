@@ -23,11 +23,11 @@ namespace Talentos.Senai.Repositories
 
         public TypeMessage Atualizar(int id, Empresa empresaAtualizado)
         {
-            try
-            {
-                Empresa empresaParaAtualizar = BuscarPorId(id);
+            Empresa empresaParaAtualizar = BuscarPorId(id);
 
-                if(empresaParaAtualizar != null)
+            if(empresaParaAtualizar != null)
+            {
+                try
                 {
                     empresaParaAtualizar.Cnpj = empresaAtualizado.Cnpj ?? empresaParaAtualizar.Cnpj;
                     empresaParaAtualizar.RazaoSocial = empresaAtualizado.RazaoSocial ?? empresaParaAtualizar.RazaoSocial;
@@ -47,20 +47,18 @@ namespace Talentos.Senai.Repositories
 
                     return _functions.replyObject(okMessage, true);
                 }
-                else
+                catch (Exception error)
                 {
-                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
-
-                    return _functions.replyObject(notFoundMessage, false);
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
                 }
-
             }
-            catch(Exception error)
+            else
             {
-                Console.WriteLine(error);
-                string errorMessage = _functions.defaultMessage(table, "error");
+                string notFoundMessage = _functions.defaultMessage(table, "notfound");
 
-                return _functions.replyObject(errorMessage, false);
+                return _functions.replyObject(notFoundMessage, false);
             }
         }
 
@@ -76,15 +74,23 @@ namespace Talentos.Senai.Repositories
 
             if (empresaExiste == null)
             {
-                ctx.Empresa.Add(novoEmpresa);
-                ctx.SaveChanges();
+                try
+                {
+                    ctx.Empresa.Add(novoEmpresa);
+                    ctx.SaveChanges();
 
-                string okMessage = _functions.defaultMessage(table, "ok");
-                return _functions.replyObject(okMessage, true);
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+                }catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
             }
             else
             {
-                string notFoundMessage= _functions.defaultMessage(table, "existente");
+                string notFoundMessage= _functions.defaultMessage(table, "exists");
 
                 return _functions.replyObject(notFoundMessage, false);
             }
@@ -110,6 +116,7 @@ namespace Talentos.Senai.Repositories
                     return _functions.replyObject(okMessage, true);
                 } catch(Exception error)
                 {
+                    Console.WriteLine(error);
                     string errorMessage = _functions.defaultMessage(table, "error");
                     return _functions.replyObject(errorMessage, false);
                 }
