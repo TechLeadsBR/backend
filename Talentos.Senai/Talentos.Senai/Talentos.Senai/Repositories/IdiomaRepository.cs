@@ -13,26 +13,39 @@ namespace Talentos.Senai.Repositories
         private TalentosContext ctx = new TalentosContext();
         private readonly FunctionsGeneral _functions = new FunctionsGeneral();
         private readonly string table = "idioma";
+        private readonly AlunoRepository _alunoRepository = new AlunoRepository();
 
         public List<Idioma> Listar() => ctx.Idioma.ToList();
+
+        public Idioma BuscarPorId(int id) => ctx.Idioma.FirstOrDefault(i => i.IdIdioma == id);
 
         public TypeMessage Cadastrar(Idioma data)
         {
 
             if(data.Idioma1 != null && data.Nivel != null && Convert.ToBoolean(data.IdAluno))
             {
-                try {
-                    ctx.Idioma.Add(data);
-                    ctx.SaveChanges();
+                Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                } catch(Exception error)
+                if(alunoBuscado == null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    string notFoundMessaege = _functions.defaultMessage("aluno", "notfound");
+                    return _functions.replyObject(notFoundMessaege, false);
+                }else
+                {
+                    try {
+                        ctx.Idioma.Add(data);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    } catch(Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
                 }
+
             } else
             {
                 string errorMessage = _functions.defaultMessage(table, "error");
@@ -42,12 +55,61 @@ namespace Talentos.Senai.Repositories
 
         public TypeMessage Atualizar(int id, Idioma data)
         {
-            throw new NotImplementedException();
+            Idioma idiomaBuscado = BuscarPorId(id);
+
+            if(idiomaBuscado != null)
+            {
+                try
+                {
+                    idiomaBuscado.Idioma1 = data.Idioma1 ?? idiomaBuscado.Idioma1;
+                    idiomaBuscado.Nivel = data.Nivel ?? idiomaBuscado.Nivel;
+                    idiomaBuscado.IdAluno = data.IdAluno ?? idiomaBuscado.IdAluno;
+
+                    ctx.Idioma.Update(idiomaBuscado);
+                    ctx.SaveChanges();
+
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+
+                } catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
+
+            } else
+            {
+                string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                return _functions.replyObject(notFoundMessage, false);
+            }
         }
 
         public TypeMessage Deletar(int id)
         {
-            throw new NotImplementedException();
+            Idioma idiomaBuscado = BuscarPorId(id);
+
+            if(idiomaBuscado != null)
+            {
+                try
+                {
+                    ctx.Remove(idiomaBuscado);
+                    ctx.SaveChanges();
+
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+
+                } catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
+            } else
+            {
+                string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                return _functions.replyObject(notFoundMessage, false);
+            }
         }
     }
 }

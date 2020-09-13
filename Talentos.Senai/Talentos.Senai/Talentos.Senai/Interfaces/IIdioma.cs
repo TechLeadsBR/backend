@@ -10,6 +10,8 @@ namespace Talentos.Senai.Interfaces
     {
         List<Idioma> Listar();
 
+        Idioma BuscarPorId(int id);
+
         TypeMessage Cadastrar(Idioma data);
 
         TypeMessage Atualizar(int id, Idioma data);

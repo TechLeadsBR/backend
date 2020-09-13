@@ -11,8 +11,8 @@ namespace Talentos.Senai.Repositories
     public class AdministradorRepository : IAdministrador
     {
         private TalentosContext ctx = new TalentosContext();
-        private readonly string table = "administrador";
         private readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly string table = "administrador";
 
         public List<Administrador> Listar() => ctx.Administrador.ToList();
 
