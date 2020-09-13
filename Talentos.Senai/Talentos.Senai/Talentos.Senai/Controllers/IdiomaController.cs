@@ -7,46 +7,44 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
-using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class EmpresaController : ControllerBase
+    public class IdiomaController : ControllerBase
     {
-        private IEmpresa _empresaRepository;
+        private IIdioma _idiomaRepository;
 
-
-        public EmpresaController()
+        public IdiomaController()
         {
-            _empresaRepository = new EmpresaRepository();
+            _idiomaRepository = new IdiomaRepository();
         }
 
         [HttpGet]
-        public IActionResult Get() => Ok(_empresaRepository.Listar());
+        public IActionResult Get() => Ok(_idiomaRepository.Listar());
 
         [HttpPost]
-        public IActionResult Post(Empresa novoEmpresa)
+        public IActionResult Post(Idioma data)
         {
-            TypeMessage returnRepository = _empresaRepository.Cadastrar(novoEmpresa);
+            TypeMessage returnRepository = _idiomaRepository.Cadastrar(data);
             if (returnRepository.ok) return StatusCode(201, returnRepository);
+            else return BadRequest(returnRepository);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Idioma data)
+        {
+            TypeMessage returnRepository = _idiomaRepository.Atualizar(id, data);
+            if (returnRepository.ok) return Ok(returnRepository);
             else return BadRequest(returnRepository);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            TypeMessage returnRepository = _empresaRepository.Deletar(id);
-            if (returnRepository.ok) return Ok(returnRepository);
-            else return BadRequest(returnRepository);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, Empresa empresaAtualizado)
-        {
-            TypeMessage returnRepository = _empresaRepository.Atualizar(id, empresaAtualizado);
+            TypeMessage returnRepository = _idiomaRepository.Deletar(id);
             if (returnRepository.ok) return Ok(returnRepository);
             else return BadRequest(returnRepository);
         }

@@ -7,48 +7,47 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
-using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class EmpresaController : ControllerBase
+    public class AdministradorController : ControllerBase
     {
-        private IEmpresa _empresaRepository;
+        private IAdministrador _administradorRepository;
 
-
-        public EmpresaController()
+        public AdministradorController()
         {
-            _empresaRepository = new EmpresaRepository();
+            _administradorRepository = new AdministradorRepository();
         }
 
         [HttpGet]
-        public IActionResult Get() => Ok(_empresaRepository.Listar());
+        public IActionResult Get() => Ok(_administradorRepository.Listar());
 
         [HttpPost]
-        public IActionResult Post(Empresa novoEmpresa)
+        public IActionResult Post(Administrador data)
         {
-            TypeMessage returnRepository = _empresaRepository.Cadastrar(novoEmpresa);
+            TypeMessage returnRepository = _administradorRepository.Cadastrar(data);
             if (returnRepository.ok) return StatusCode(201, returnRepository);
+            else return BadRequest(returnRepository);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Administrador data)
+        {
+            TypeMessage returnRepository = _administradorRepository.Atualizar(id, data);
+            if (returnRepository.ok) return Ok(returnRepository);
             else return BadRequest(returnRepository);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            TypeMessage returnRepository = _empresaRepository.Deletar(id);
+            TypeMessage returnRepository = _administradorRepository.Deletar(id);
             if (returnRepository.ok) return Ok(returnRepository);
             else return BadRequest(returnRepository);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, Empresa empresaAtualizado)
-        {
-            TypeMessage returnRepository = _empresaRepository.Atualizar(id, empresaAtualizado);
-            if (returnRepository.ok) return Ok(returnRepository);
-            else return BadRequest(returnRepository);
-        }
     }
 }

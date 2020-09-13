@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,18 +11,11 @@ namespace Talentos.Senai.Repositories
 {
     public class AlunoRepository : IAluno
     {
-        TalentosContext ctx = new TalentosContext();
+        private TalentosContext ctx = new TalentosContext();
+        private readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly string table = "aluno";
 
-        private General _functions;
-        private string table;
-
-        public AlunoRepository()
-        {
-            _functions = new General();
-            table = "aluno";
-        }
-
-        public List<Aluno> Listar() => ctx.Aluno.ToList();
+        public List<Aluno> Listar() => ctx.Aluno.Include(a => a.IdEnderecoNavigation).Include(a => a.IdTipoUsuarioNavigation).ToList();
 
         public Aluno BuscarPorId(int id) => ctx.Aluno.FirstOrDefault(a => a.IdAluno == id);
 
@@ -31,17 +25,23 @@ namespace Talentos.Senai.Repositories
 
             if(alunoExistente == null)
             {
-                ctx.Aluno.Add(data);
-                ctx.SaveChanges();
+                try
+                {
+                    ctx.Aluno.Add(data);
+                    ctx.SaveChanges();
 
-                string okMessage = _functions.defaultMessage(table, "ok");
-
-                return _functions.replyObject(okMessage, true);
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+                } catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
             }
             else
             {
-                string alunoExists = _functions.defaultMessage(table, "existente");
-
+                string alunoExists = _functions.defaultMessage(table, "exists");
                 return _functions.replyObject(alunoExists, false);
             }
         }
@@ -52,35 +52,44 @@ namespace Talentos.Senai.Repositories
 
             if(alunoParaAtualizar != null)
             {
-                alunoParaAtualizar.Nome = dataAluno.Nome ?? alunoParaAtualizar.Nome;
-                alunoParaAtualizar.Email = dataAluno.Email ?? alunoParaAtualizar.Email;
-                alunoParaAtualizar.Senha = dataAluno.Senha ?? alunoParaAtualizar.Senha;
-                alunoParaAtualizar.NomeSocial = dataAluno.NomeSocial ?? alunoParaAtualizar.NomeSocial;
-                alunoParaAtualizar.Rg = dataAluno.Rg ?? alunoParaAtualizar.Rg;
-                alunoParaAtualizar.Cpf = dataAluno.Cpf ?? alunoParaAtualizar.Cpf;
-                alunoParaAtualizar.DataNascimento = dataAluno.DataNascimento != null ? dataAluno.DataNascimento : alunoParaAtualizar.DataNascimento;
-                alunoParaAtualizar.Genero = dataAluno.Genero ?? alunoParaAtualizar.Genero;
-                alunoParaAtualizar.CursoSenai = dataAluno.CursoSenai ??alunoParaAtualizar.CursoSenai;
-                alunoParaAtualizar.DataFormacao = dataAluno.DataFormacao  != null ? dataAluno.DataFormacao : alunoParaAtualizar.DataFormacao;
-                alunoParaAtualizar.Telefone = dataAluno.Telefone ?? alunoParaAtualizar.Telefone;
-                alunoParaAtualizar.TipoDefiencia = dataAluno.TipoDefiencia ?? alunoParaAtualizar.TipoDefiencia;
-                alunoParaAtualizar.DetalheDeficiencia = dataAluno.DetalheDeficiencia ?? alunoParaAtualizar.DetalheDeficiencia;
-                alunoParaAtualizar.PreferenciaArea = dataAluno.PreferenciaArea ?? alunoParaAtualizar.PreferenciaArea;
-                alunoParaAtualizar.Descricao = dataAluno.Descricao ?? alunoParaAtualizar.Descricao;
-                alunoParaAtualizar.Linkedin = dataAluno.Linkedin ?? alunoParaAtualizar.Linkedin;
-                alunoParaAtualizar.GitHub = dataAluno.GitHub ?? alunoParaAtualizar.GitHub;
-                alunoParaAtualizar.NomeFoto = dataAluno.NomeFoto ?? alunoParaAtualizar.NomeFoto;
-                alunoParaAtualizar.PerfilComportamental = dataAluno.PerfilComportamental ?? alunoParaAtualizar.PerfilComportamental;
-                alunoParaAtualizar.IdTipoUsuario = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdTipoUsuario;
-                alunoParaAtualizar.IdEndereco = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdEndereco;
+                try
+                {
+                    alunoParaAtualizar.Nome = dataAluno.Nome ?? alunoParaAtualizar.Nome;
+                    alunoParaAtualizar.Email = dataAluno.Email ?? alunoParaAtualizar.Email;
+                    alunoParaAtualizar.Senha = dataAluno.Senha ?? alunoParaAtualizar.Senha;
+                    alunoParaAtualizar.NomeSocial = dataAluno.NomeSocial ?? alunoParaAtualizar.NomeSocial;
+                    alunoParaAtualizar.Rg = dataAluno.Rg ?? alunoParaAtualizar.Rg;
+                    alunoParaAtualizar.Cpf = dataAluno.Cpf ?? alunoParaAtualizar.Cpf;
+                    alunoParaAtualizar.DataNascimento = dataAluno.DataNascimento != null ? dataAluno.DataNascimento : alunoParaAtualizar.DataNascimento;
+                    alunoParaAtualizar.Genero = dataAluno.Genero ?? alunoParaAtualizar.Genero;
+                    alunoParaAtualizar.CursoSenai = dataAluno.CursoSenai ??alunoParaAtualizar.CursoSenai;
+                    alunoParaAtualizar.DataFormacao = dataAluno.DataFormacao  != null ? dataAluno.DataFormacao : alunoParaAtualizar.DataFormacao;
+                    alunoParaAtualizar.Telefone = dataAluno.Telefone ?? alunoParaAtualizar.Telefone;
+                    alunoParaAtualizar.TipoDefiencia = dataAluno.TipoDefiencia ?? alunoParaAtualizar.TipoDefiencia;
+                    alunoParaAtualizar.DetalheDeficiencia = dataAluno.DetalheDeficiencia ?? alunoParaAtualizar.DetalheDeficiencia;
+                    alunoParaAtualizar.PreferenciaArea = dataAluno.PreferenciaArea ?? alunoParaAtualizar.PreferenciaArea;
+                    alunoParaAtualizar.Descricao = dataAluno.Descricao ?? alunoParaAtualizar.Descricao;
+                    alunoParaAtualizar.Linkedin = dataAluno.Linkedin ?? alunoParaAtualizar.Linkedin;
+                    alunoParaAtualizar.GitHub = dataAluno.GitHub ?? alunoParaAtualizar.GitHub;
+                    alunoParaAtualizar.NomeFoto = dataAluno.NomeFoto ?? alunoParaAtualizar.NomeFoto;
+                    alunoParaAtualizar.PerfilComportamental = dataAluno.PerfilComportamental ?? alunoParaAtualizar.PerfilComportamental;
+                    alunoParaAtualizar.IdTipoUsuario = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdTipoUsuario;
+                    alunoParaAtualizar.IdEndereco = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdEndereco;
 
-                ctx.Aluno.Update(alunoParaAtualizar);
-                ctx.SaveChanges();
+                    ctx.Aluno.Update(alunoParaAtualizar);
+                    ctx.SaveChanges();
 
-                string okMessage = _functions.defaultMessage(table, "ok");
-                return _functions.replyObject(okMessage, true);
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+                } catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
 
-            } else
+            } 
+            else
             {
                 string notFoundMessage = _functions.defaultMessage(table, "notfound");
                 return _functions.replyObject(notFoundMessage, false);
@@ -102,10 +111,12 @@ namespace Talentos.Senai.Repositories
                     return _functions.replyObject(okMessage, true);
                 } catch(Exception error)
                 {
+                    Console.WriteLine(error);
                     string errorMessage = _functions.defaultMessage(table, "error");
                     return _functions.replyObject(errorMessage, false);
                 }
-            } else
+            } 
+            else
             {
                 string notFoundMessage = _functions.defaultMessage(table, "notfound");
                 return _functions.replyObject(notFoundMessage, false);
