@@ -49,8 +49,8 @@ namespace Talentos.Senai.Repositories
 
             } else
             {
-                string errorMessage = _functions.defaultMessage(table, "error");
-                return _functions.replyObject(errorMessage, false);
+                string dataMessage = _functions.defaultMessage(table, "data");
+                return _functions.replyObject(dataMessage, false);
             }
         }
 
