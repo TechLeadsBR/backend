@@ -1,21 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\20127464\\Downloads\\tech-leads\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {}
+    "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {}
   },
   "projects": {
-    "C:\\Users\\20127464\\Downloads\\tech-leads\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {
+    "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\20127464\\Downloads\\tech-leads\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
+        "projectUniqueName": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
         "projectName": "Talentos.Senai",
-        "projectPath": "C:\\Users\\20127464\\Downloads\\tech-leads\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
-        "packagesPath": "C:\\Users\\20127464\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\20127464\\Downloads\\tech-leads\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\obj\\",
+        "projectPath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
+        "packagesPath": "C:\\Users\\erica\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\20127464\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\erica\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.1"
@@ -43,11 +48,6 @@
               "target": "Package",
               "version": "[2.1.1, )",
               "autoReferenced": true
-            },
-            "Microsoft.AspNetCore.Razor.Design": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.1.2, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -88,7 +88,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
         }
       }
     }
