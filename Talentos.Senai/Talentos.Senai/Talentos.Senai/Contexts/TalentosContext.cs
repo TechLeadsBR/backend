@@ -31,7 +31,7 @@ namespace Talentos.Senai.Domains
         {
             if (!optionsBuilder.IsConfigured)
             {
-                string database = "DESKTOP-M396CC9";
+                string database = "DESKTOP-G005E3N\\SQLEXPRESS";
 
                 optionsBuilder.UseSqlServer($"Data Source={database}; Initial Catalog=Talentos; Integrated Security=True");
             }
