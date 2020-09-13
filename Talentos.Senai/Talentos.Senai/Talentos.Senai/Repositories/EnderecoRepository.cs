@@ -11,7 +11,7 @@ namespace Talentos.Senai.Repositories
     public class EnderecoRepository : IEndereco
     {
         private TalentosContext ctx = new TalentosContext();
-        private readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly Functions _functions = new Functions();
         private readonly string table = "endereco";
 
         public List<Endereco> Listar() => ctx.Endereco.ToList();
@@ -70,8 +70,8 @@ namespace Talentos.Senai.Repositories
                 }
             } else
             {
-                string errorMessage = _functions.defaultMessage(table, "error");
-                return _functions.replyObject(errorMessage, false);
+                string dataMessage = _functions.defaultMessage(table, "data");
+                return _functions.replyObject(dataMessage, false);
             }
         }
 

@@ -25,7 +25,7 @@ namespace Talentos.Senai.Utilities
                 return type == "exists" ? $"{table} já existente, verifique os dados digitados" :
                     type == "error" ? $"ocorreu um erro no procedimento da tabela {table}" :
                     type == "ok" ? $"{table} - sucesso no procedimento" :
-                    type == "notfound" ? $"{table} não encontrado(a)" : $"dados invalidos na tabela {table}";
+                    type == "notfound" ? $"{table} não encontrado(a)" : $"{table} - dados invalidos";
             }
             else
             {

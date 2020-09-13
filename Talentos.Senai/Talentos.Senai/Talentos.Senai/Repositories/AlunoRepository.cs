@@ -27,6 +27,9 @@ namespace Talentos.Senai.Repositories
             {
                 try
                 {
+                    if (data.DataFormacao > DateTime.Now) data.IdTipoUsuario = 2;
+                    else data.IdTipoUsuario = 4;
+
                     ctx.Aluno.Add(data);
                     ctx.SaveChanges();
 

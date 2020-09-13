@@ -48,14 +48,14 @@ namespace Talentos.Senai.Repositories
 
         public TypeMessage Atualizar(TipoUsuario tituloNovo, int id)
         {
-            TipoUsuario tipoUsuariobuscado = BuscarPorId(id);
+            TipoUsuario tipoUsuarioBuscado = BuscarPorId(id);
 
-            if(tipoUsuariobuscado != null)
+            if(tipoUsuarioBuscado != null)
             {
                 try
                 {
-                    tipoUsuariobuscado.TituloTipoUsuario = tituloNovo.TituloTipoUsuario;
-                    ctx.TipoUsuario.Update(tipoUsuariobuscado);
+                    tipoUsuarioBuscado.TituloTipoUsuario = tituloNovo.TituloTipoUsuario;
+                    ctx.TipoUsuario.Update(tipoUsuarioBuscado);
                     ctx.SaveChanges();
 
                     string okMessage = _functions.defaultMessage(table, "ok");
