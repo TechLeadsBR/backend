@@ -15,6 +15,9 @@ namespace Talentos.Senai.Repositories
         private readonly FunctionsGeneral _functions = new FunctionsGeneral();
         private readonly string table = "empresa";
 
+        public Empresa BuscarPorId(int id) => ctx.Empresa.FirstOrDefault(e => e.IdEmpresa == id);
+        public List<Empresa> Listar() => ctx.Empresa.Include(e => e.IdTipoUsuarioNavigation).ToList();
+
         public TypeMessage Atualizar(int id, Empresa empresaAtualizado)
         {
             Empresa empresaParaAtualizar = BuscarPorId(id);
@@ -51,12 +54,10 @@ namespace Talentos.Senai.Repositories
             else
             {
                 string notFoundMessage = _functions.defaultMessage(table, "notfound");
-
                 return _functions.replyObject(notFoundMessage, false);
             }
         }
 
-        public Empresa BuscarPorId(int id) => ctx.Empresa.FirstOrDefault(e => e.IdEmpresa == id);
 
         /// <summary>
         /// Cadastra uma nova Empresa
@@ -123,6 +124,5 @@ namespace Talentos.Senai.Repositories
             }
         }
 
-        public List<Empresa> Listar() => ctx.Empresa.Include(e => e.IdTipoUsuarioNavigation).ToList();
     }
 }

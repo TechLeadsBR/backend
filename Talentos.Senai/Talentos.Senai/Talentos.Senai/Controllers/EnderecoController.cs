@@ -23,42 +23,35 @@ namespace Talentos.Senai.Controllers
         }
 
         [HttpGet]
-        
-        public IActionResult Get()
-        {
-            return Ok(_enderecoRepository.Listar());
-        }
+        public IActionResult Get() => Ok(_enderecoRepository.Listar());
+    
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            return Ok(_enderecoRepository.BuscarPorId(id));
-        }
+        public IActionResult GetById(int id) => Ok(_enderecoRepository.BuscarPorId(id));
+
 
         [HttpPost]
         public IActionResult Post(Endereco novoEndereco)
         {
-            _enderecoRepository.CadastrarEndereco(novoEndereco);
-            return StatusCode(201);
+            TypeMessage returnRepository = _enderecoRepository.CadastrarEndereco(novoEndereco);
+            if (returnRepository.ok) return StatusCode(201, returnRepository);
+            else return BadRequest(returnRepository);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, Endereco enderecoAtualizado)
         {
-
-            _enderecoRepository.AtualizarEndereco(id, enderecoAtualizado);
-
-            return StatusCode(204);
+            TypeMessage returnRepository = _enderecoRepository.AtualizarEndereco(id, enderecoAtualizado);
+            if (returnRepository.ok) return Ok(returnRepository);
+            else return BadRequest(returnRepository);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _enderecoRepository.DeletarEndereco(id);
-
-            return StatusCode(204);
-        }
-
-    
+            TypeMessage returnRepository = _enderecoRepository.DeletarEndereco(id);
+            if (returnRepository.ok) return Ok(returnRepository);
+            else return BadRequest(returnRepository);
+        }    
     }
 }

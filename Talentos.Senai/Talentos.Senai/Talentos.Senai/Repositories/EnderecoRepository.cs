@@ -4,52 +4,102 @@ using System.Linq;
 using System.Threading.Tasks;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Repositories
 {
     public class EnderecoRepository : IEndereco
     {
-        TalentosContext ctx = new TalentosContext();
+        private TalentosContext ctx = new TalentosContext();
+        private readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly string table = "endereco";
 
-        public void AtualizarEndereco(int id, Endereco enderecoAtualizado)
+        public List<Endereco> Listar() => ctx.Endereco.ToList();
+
+        public Endereco BuscarPorId(int id) => ctx.Endereco.FirstOrDefault(e => e.IdEndereco == id);
+
+        public TypeMessage AtualizarEndereco(int id, Endereco data)
         {
-            Endereco enderecoAtualizar = ctx.Endereco.Find(id);
- 
-                enderecoAtualizar.Cep = enderecoAtualizado.Cep != null ? enderecoAtualizado.Cep : enderecoAtualizar.Cep;
-                enderecoAtualizar.Logradouro = enderecoAtualizado.Logradouro != null ? enderecoAtualizado.Logradouro : enderecoAtualizar.Logradouro;
-                enderecoAtualizar.Bairro = enderecoAtualizado.Bairro != null ? enderecoAtualizado.Bairro : enderecoAtualizar.Bairro;
-                enderecoAtualizar.Numero = enderecoAtualizado.Numero != null ? enderecoAtualizado.Numero : enderecoAtualizar.Numero;
-                enderecoAtualizar.Complemento = enderecoAtualizado.Complemento != null ? enderecoAtualizado.Complemento : enderecoAtualizar.Complemento;
-                enderecoAtualizar.Localidade = enderecoAtualizado.Localidade != null ? enderecoAtualizado.Localidade : enderecoAtualizar.Localidade;
+            Endereco enderecoAtualizar = BuscarPorId(id);
 
-            ctx.Endereco.Update(enderecoAtualizar);
-            ctx.SaveChanges();
+            if(enderecoAtualizar != null)
+            {
+                try
+                {
+                    enderecoAtualizar.Cep = data.Cep ?? enderecoAtualizar.Cep;
+                    enderecoAtualizar.Logradouro = data.Logradouro ?? enderecoAtualizar.Logradouro;
+                    enderecoAtualizar.Bairro = data.Bairro ?? enderecoAtualizar.Bairro;
+                    enderecoAtualizar.Numero = data.Numero ?? enderecoAtualizar.Numero;
+                    enderecoAtualizar.Complemento = data.Complemento ?? enderecoAtualizar.Complemento;
+                    enderecoAtualizar.Localidade = data.Localidade ?? enderecoAtualizar.Localidade;
+
+                    ctx.Endereco.Update(enderecoAtualizar);
+                    ctx.SaveChanges();
+
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+                } catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
+            } else
+            {
+                string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                return _functions.replyObject(notFoundMessage, false);
+            }
         }
 
-      
-
-        public Endereco BuscarPorId(int id)
+        public TypeMessage CadastrarEndereco(Endereco novoEndereco)
         {
-            return ctx.Endereco.FirstOrDefault(e => e.IdEndereco == id);
+            if(novoEndereco != null)
+            {
+                try
+                {
+                    ctx.Endereco.Add(novoEndereco);
+                    ctx.SaveChanges();
+
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+                } catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
+            } else
+            {
+                string errorMessage = _functions.defaultMessage(table, "error");
+                return _functions.replyObject(errorMessage, false);
+            }
         }
 
-        public void CadastrarEndereco(Endereco novoEndereco)
+        public TypeMessage DeletarEndereco(int id)
         {
-            ctx.Endereco.Add(novoEndereco);
+            Endereco enderecoBuscado = BuscarPorId(id);
 
-            ctx.SaveChanges();
+            if(enderecoBuscado != null)
+            {
+                try
+                {
+                    ctx.Endereco.Remove(enderecoBuscado);
+                    ctx.SaveChanges();
 
-        }
-
-        public void DeletarEndereco(int id)
-        {
-            Endereco enderecoBuscar = ctx.Endereco.Find(id);
-            ctx.Endereco.Remove(enderecoBuscar);
-        }
-
-        public List<Endereco> Listar()
-        {
-            return ctx.Endereco.ToList();
+                    string okMessage = _functions.defaultMessage(table, "ok");
+                    return _functions.replyObject(okMessage, true);
+                } catch(Exception error)
+                {
+                    Console.WriteLine(error);
+                    string errorMessage = _functions.defaultMessage(table, "error");
+                    return _functions.replyObject(errorMessage, false);
+                }
+            }
+            else
+            {
+                string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                return _functions.replyObject(notFoundMessage, false);
+            }
         }
     }
 }
