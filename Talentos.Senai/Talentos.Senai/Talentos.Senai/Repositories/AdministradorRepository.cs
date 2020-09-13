@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Talentos.Senai.Repositories
         private readonly FunctionsGeneral _functions = new FunctionsGeneral();
         private readonly string table = "administrador";
 
-        public List<Administrador> Listar() => ctx.Administrador.ToList();
+        public List<Administrador> Listar() => ctx.Administrador.Include(a => a.IdTipoUsuarioNavigation).ToList();
 
         public Administrador BuscarPorId(int id) => ctx.Administrador.FirstOrDefault(a => a.IdAdministrador == id);
 

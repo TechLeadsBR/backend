@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Talentos.Senai.Repositories
         private readonly FunctionsGeneral _functions = new FunctionsGeneral();
         private readonly string table = "aluno";
 
-        public List<Aluno> Listar() => ctx.Aluno.ToList();
+        public List<Aluno> Listar() => ctx.Aluno.Include(a => a.IdEnderecoNavigation).Include(a => a.IdTipoUsuarioNavigation).ToList();
 
         public Aluno BuscarPorId(int id) => ctx.Aluno.FirstOrDefault(a => a.IdAluno == id);
 
