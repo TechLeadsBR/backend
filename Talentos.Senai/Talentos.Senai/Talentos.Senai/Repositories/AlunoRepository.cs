@@ -10,16 +10,9 @@ namespace Talentos.Senai.Repositories
 {
     public class AlunoRepository : IAluno
     {
-        TalentosContext ctx = new TalentosContext();
-
-        private General _functions;
-        private string table;
-
-        public AlunoRepository()
-        {
-            _functions = new General();
-            table = "aluno";
-        }
+        private TalentosContext ctx = new TalentosContext();
+        private readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly string table = "aluno";
 
         public List<Aluno> Listar() => ctx.Aluno.ToList();
 

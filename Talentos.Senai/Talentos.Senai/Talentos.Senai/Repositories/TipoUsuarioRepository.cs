@@ -9,16 +9,9 @@ namespace Talentos.Senai.Repositories
 {
     public class TipoUsuarioRepository : ITipoUsuario
     {
-        TalentosContext ctx = new TalentosContext();
-
-        public General _functions;
-        private string table;
-
-        public TipoUsuarioRepository()
-        {
-            _functions = new General();
-            table = "tipousuario";
-        }
+        private TalentosContext ctx = new TalentosContext();
+        public readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly string table = "tipousuario";
 
         public List<TipoUsuario> Listar() => ctx.TipoUsuario.ToList();
         public TipoUsuario BuscarPorNome(string titulo) => ctx.TipoUsuario.FirstOrDefault(t => t.TituloTipoUsuario == titulo);
