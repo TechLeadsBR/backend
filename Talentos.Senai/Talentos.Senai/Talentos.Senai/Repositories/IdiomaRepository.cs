@@ -12,7 +12,7 @@ namespace Talentos.Senai.Repositories
     public class IdiomaRepository : IIdioma
     {
         private TalentosContext ctx = new TalentosContext();
-        private readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        private readonly Functions _functions = new Functions();
         private readonly string table = "idioma";
         private readonly AlunoRepository _alunoRepository = new AlunoRepository();
 

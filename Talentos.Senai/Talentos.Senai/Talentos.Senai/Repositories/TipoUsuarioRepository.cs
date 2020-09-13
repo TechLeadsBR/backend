@@ -10,7 +10,7 @@ namespace Talentos.Senai.Repositories
     public class TipoUsuarioRepository : ITipoUsuario
     {
         private TalentosContext ctx = new TalentosContext();
-        public readonly FunctionsGeneral _functions = new FunctionsGeneral();
+        public readonly Functions _functions = new Functions();
         private readonly string table = "tipousuario";
 
         public List<TipoUsuario> Listar() => ctx.TipoUsuario.ToList();

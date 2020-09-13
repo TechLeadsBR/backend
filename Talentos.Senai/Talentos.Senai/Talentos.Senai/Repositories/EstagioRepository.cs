@@ -9,102 +9,106 @@ using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Repositories
 {
-    public class AdministradorRepository : IAdministrador
+    public class EstagioRepository : IEstagio
     {
         private TalentosContext ctx = new TalentosContext();
         private readonly Functions _functions = new Functions();
-        private readonly string table = "administrador";
+        private readonly string table = "estagio";
 
-        public List<Administrador> Listar() => ctx.Administrador.Include(a => a.IdTipoUsuarioNavigation).ToList();
+        public List<Estagio> Listar() => ctx.Estagio.Include(e => e.IdAlunoNavigation).Include(e => e.IdEmpresaNavigation).ToList();
 
-        public Administrador BuscarPorId(int id) => ctx.Administrador.FirstOrDefault(a => a.IdAdministrador == id);
+        public Estagio BuscarPorIdAluno(int id) => ctx.Estagio.FirstOrDefault(e => e.IdAluno == id);
 
-        public Administrador BuscarPorEmaileCpf(string email, string cpf) => ctx.Administrador.FirstOrDefault(a => a.Email == email || a.Cpf == cpf);
+        public Estagio BuscarPorId(int id) => ctx.Estagio.FirstOrDefault(e => e.IdEstagio == id);
 
-        public TypeMessage Cadastrar(Administrador data)
+        public TypeMessage Cadastrar(Estagio data)
         {
-            Administrador administradorBuscado = BuscarPorEmaileCpf(data.Email, data.Cpf);
+            Estagio estagioProcurado = BuscarPorIdAluno(data.IdAluno.GetValueOrDefault());
 
-            if(administradorBuscado == null)
+            if(estagioProcurado == null)
             {
                 try
                 {
-                    ctx.Administrador.Add(data);
+                    ctx.Estagio.Add(data);
                     ctx.SaveChanges();
-
                     string okMessage = _functions.defaultMessage(table, "ok");
                     return _functions.replyObject(okMessage, true);
+
                 } catch(Exception error)
                 {
                     Console.WriteLine(error);
                     string errorMessage = _functions.defaultMessage(table, "error");
                     return _functions.replyObject(errorMessage, false);
                 }
-            }
-            else
+            } else
             {
                 string existsMessage = _functions.defaultMessage(table, "exists");
                 return _functions.replyObject(existsMessage, false);
             }
         }
-
-        public TypeMessage Atualizar(int id, Administrador data)
+    
+        public TypeMessage Atualizar(int id, Estagio data)
         {
-            Administrador administradorBuscado = BuscarPorId(id);
+            Estagio estagioBuscado = BuscarPorId(id);
 
-            if(administradorBuscado != null)
+            if(estagioBuscado != null)
             {
                 try
                 {
-                    administradorBuscado.Nome = data.Nome ?? administradorBuscado.Nome;
-                    administradorBuscado.Email = data.Email ?? administradorBuscado.Email;
-                    administradorBuscado.Senha = data.Senha ?? administradorBuscado.Senha;
-                    administradorBuscado.Cpf = data.Cpf ?? administradorBuscado.Cpf;
-                    administradorBuscado.IdTipoUsuario = data.IdTipoUsuario ?? administradorBuscado.IdTipoUsuario;
+                    estagioBuscado.Responsavel = data.Responsavel ?? estagioBuscado.Responsavel;
+                    estagioBuscado.Inicio = data.Inicio != null ? data.Inicio : estagioBuscado.Inicio;
+                    estagioBuscado.Termino = data.Termino != null ? data.Termino : estagioBuscado.Termino;
+                    estagioBuscado.StatusContrato = data.StatusContrato ?? estagioBuscado.StatusContrato;
+                    estagioBuscado.Documentos = data.Documentos ?? estagioBuscado.Documentos;
+                    estagioBuscado.IdEmpresa = data.IdEmpresa ?? estagioBuscado.IdEmpresa;
+                    estagioBuscado.IdAluno = data.IdAluno ?? estagioBuscado.IdAluno;
 
-                    ctx.Administrador.Update(administradorBuscado);
+                    ctx.Estagio.Update(estagioBuscado);
                     ctx.SaveChanges();
 
                     string okMessage = _functions.defaultMessage(table, "ok");
                     return _functions.replyObject(okMessage, true);
+
                 } catch(Exception error)
                 {
                     Console.WriteLine(error);
                     string errorMessage = _functions.defaultMessage(table, "error");
                     return _functions.replyObject(errorMessage, false);
                 }
-            }
-            else
+            } else
             {
                 string notFoundMessage = _functions.defaultMessage(table, "notfound");
                 return _functions.replyObject(notFoundMessage, false);
             }
+            
         }
 
         public TypeMessage Deletar(int id)
         {
-            Administrador administradorBuscado = BuscarPorId(id);
+            Estagio estagioProcurado = BuscarPorId(id);
 
-            if(administradorBuscado != null)
+            if (estagioProcurado != null)
             {
                 try
                 {
-                    ctx.Administrador.Remove(administradorBuscado);
+                    ctx.Estagio.Remove(estagioProcurado);
                     ctx.SaveChanges();
+
                     string okMessage = _functions.defaultMessage(table, "ok");
                     return _functions.replyObject(okMessage, true);
-                }catch (Exception error)
+
+                } catch(Exception error)
                 {
                     Console.WriteLine(error);
                     string errorMessage = _functions.defaultMessage(table, "error");
                     return _functions.replyObject(errorMessage, false);
                 }
-            }
-            else
+            } else
             {
                 string notFoundMessage = _functions.defaultMessage(table, "notfound");
                 return _functions.replyObject(notFoundMessage, false);
             }
         }
+
     }
 }
