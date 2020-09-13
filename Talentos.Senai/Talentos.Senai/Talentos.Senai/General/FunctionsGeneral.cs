@@ -20,12 +20,12 @@ namespace Talentos.Senai.Utilities
         {
             type = type.ToLower();
 
-            if(type == "exists" || type == "ok" || type == "error" || type == "notfound")
+            if(type == "exists" || type == "ok" || type == "error" || type == "notfound" || type == "data")
             {
                 return type == "exists" ? $"{table} já existente, verifique os dados digitados" :
                     type == "error" ? $"ocorreu um erro no procedimento da tabela {table}" :
                     type == "ok" ? $"{table} - sucesso no procedimento" :
-                    $"{table} não encontrado(a)";
+                    type == "notfound" ? $"{table} não encontrado(a)" : $"dados invalidos na tabela {table}";
             }
             else
             {
