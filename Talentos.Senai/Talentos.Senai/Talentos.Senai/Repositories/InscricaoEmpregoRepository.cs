@@ -15,7 +15,7 @@ namespace Talentos.Senai.Repositories
         private readonly Functions _functions = new Functions();
         private readonly string table = "inscricaoemprego";
         private readonly IAluno _alunoRepository = new AlunoRepository();
-        //private readonly IVagaEmprego _vagaEmpregoRepository = new VagaEmpregoRepository();
+        private readonly IVagaEmprego _vagaEmpregoRepository = new VagaEmpregoRepository();
 
         public List<InscricaoEmprego> Listar() => ctx.InscricaoEmprego.Include(e => e.IdAlunoNavigation).Include(e => e.IdVagaEmpregoNavigation).ToList();
         public InscricaoEmprego BuscarporIdAlunoeVagaEmprego(int idAluno, int idVagaEmprego) => ctx.InscricaoEmprego.FirstOrDefault(e => e.IdAluno == idAluno && e.IdVagaEmprego == idVagaEmprego);
@@ -26,21 +26,31 @@ namespace Talentos.Senai.Repositories
             InscricaoEmprego inscricaoProcurada = BuscarporIdAlunoeVagaEmprego(
                 data.IdAluno.GetValueOrDefault(), 
                 data.IdVagaEmprego.GetValueOrDefault());
+            VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
+            Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+
 
             if (inscricaoProcurada == null)
             {
-                try
+                if(vagaBuscada != null && alunoBuscado != null)
                 {
-                    ctx.InscricaoEmprego.Add(data);
-                    ctx.SaveChanges();
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                }
-                catch (Exception error)
+                    try
+                    {
+                        ctx.InscricaoEmprego.Add(data);
+                        ctx.SaveChanges();
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                } else
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    string dataMessage = _functions.defaultMessage(table, "data");
+                    return _functions.replyObject(dataMessage, false);
                 }
 
             } else {
@@ -57,13 +67,11 @@ namespace Talentos.Senai.Repositories
             if (inscricaoBuscada != null)
             {
                 Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
-                //VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego);
+                VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
                 InscricaoEmprego inscricaoExistente = BuscarporIdAlunoeVagaEmprego(
-                    inscricaoBuscada.IdAluno.GetValueOrDefault(), inscricaoBuscada.IdVagaEmprego.GetValueOrDefault());
+                    data.IdAluno.GetValueOrDefault(), data.IdVagaEmprego.GetValueOrDefault());
 
-                if(alunoBuscado != null
-                    //vagaBuscada != null
-                    && inscricaoExistente == null)
+                if(alunoBuscado != null && vagaBuscada != null && inscricaoExistente == null)
                 {
                     try
                     {
