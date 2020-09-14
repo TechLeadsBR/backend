@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9rXKmHCwDqrttQ1d3FNhS/eRLYmJpnO5D73c9koOVkOSu5pYvQbXp0h6fwOGbjseL6Zji+xgFYwn6nZUNo6xxQ==",
+  "dgSpecHash": "iyMmRylv5Yo56yM8TbsFW8aRBFIDZcWLaAzmuGb5s1vx6o6MM99w086MiYWziIvZfo6FicEaJ6RG+QUtyE8Mkw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
+  "projectFilePath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\back\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
   "expectedPackageFiles": [
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.aspnet.webapi.client\\5.2.6\\microsoft.aspnet.webapi.client.5.2.6.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.aspnetcore\\2.1.1\\microsoft.aspnetcore.2.1.1.nupkg.sha512",

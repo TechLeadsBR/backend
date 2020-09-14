@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {}
+    "C:\\Users\\erica\\Desktop\\Projeto Talentos\\back\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {}
   },
   "projects": {
-    "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {
+    "C:\\Users\\erica\\Desktop\\Projeto Talentos\\back\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
+        "projectUniqueName": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\back\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
         "projectName": "Talentos.Senai",
-        "projectPath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
+        "projectPath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\back\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
         "packagesPath": "C:\\Users\\erica\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\obj\\",
+        "outputPath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\back\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
