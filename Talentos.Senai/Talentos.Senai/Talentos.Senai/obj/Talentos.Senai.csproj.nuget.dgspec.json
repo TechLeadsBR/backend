@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {}
+    "E:\\Henrique\\SENAI\\TechLeads\\Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {}
   },
   "projects": {
-    "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {
+    "E:\\Henrique\\SENAI\\TechLeads\\Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
+        "projectUniqueName": "E:\\Henrique\\SENAI\\TechLeads\\Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
         "projectName": "Talentos.Senai",
-        "projectPath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
-        "packagesPath": "C:\\Users\\erica\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\erica\\Desktop\\Projeto Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\obj\\",
+        "projectPath": "E:\\Henrique\\SENAI\\TechLeads\\Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai.csproj",
+        "packagesPath": "C:\\Users\\Henrique\\.nuget\\packages\\",
+        "outputPath": "E:\\Henrique\\SENAI\\TechLeads\\Talentos\\backend\\Talentos.Senai\\Talentos.Senai\\Talentos.Senai\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
-          "C:\\Users\\erica\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Henrique\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
