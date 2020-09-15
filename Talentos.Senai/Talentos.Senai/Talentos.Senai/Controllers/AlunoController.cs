@@ -11,7 +11,7 @@ using Talentos.Senai.Repositories;
 namespace Talentos.Senai.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AlunoController : ControllerBase
     {

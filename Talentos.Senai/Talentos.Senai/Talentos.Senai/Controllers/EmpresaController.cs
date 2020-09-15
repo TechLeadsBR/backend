@@ -12,7 +12,7 @@ using Talentos.Senai.Utilities;
 namespace Talentos.Senai.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class EmpresaController : ControllerBase
     {
