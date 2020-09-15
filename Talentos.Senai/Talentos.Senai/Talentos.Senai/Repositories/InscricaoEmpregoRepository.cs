@@ -26,12 +26,13 @@ namespace Talentos.Senai.Repositories
             InscricaoEmprego inscricaoProcurada = BuscarporIdAlunoeVagaEmprego(
                 data.IdAluno.GetValueOrDefault(), 
                 data.IdVagaEmprego.GetValueOrDefault());
-            VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
-            Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
 
 
             if (inscricaoProcurada == null)
             {
+                VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
+                Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+
                 if(vagaBuscada != null && alunoBuscado != null)
                 {
                     try
@@ -66,10 +67,10 @@ namespace Talentos.Senai.Repositories
 
             if (inscricaoBuscada != null)
             {
-                Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
-                VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
                 InscricaoEmprego inscricaoExistente = BuscarporIdAlunoeVagaEmprego(
                     data.IdAluno.GetValueOrDefault(), data.IdVagaEmprego.GetValueOrDefault());
+                Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+                VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
 
                 if(alunoBuscado != null && vagaBuscada != null && inscricaoExistente == null)
                 {

@@ -24,20 +24,30 @@ namespace Talentos.Senai.Repositories
         {
             if (data != null)
             {
-                try
-                {
-                    ctx.VagaEmprego.Add(data);
-                    ctx.SaveChanges();
+                Empresa empresaBuscada = _empresaRepository.BuscarPorId(data.IdEmpresa.GetValueOrDefault());
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-
-                } catch(Exception error)
+                if(empresaBuscada != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        ctx.VagaEmprego.Add(data);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+
+                    } catch(Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                }else
+                {
+                    string notFoundMessage = _functions.defaultMessage("empresa", "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
                 }
+
 
             } else
             {

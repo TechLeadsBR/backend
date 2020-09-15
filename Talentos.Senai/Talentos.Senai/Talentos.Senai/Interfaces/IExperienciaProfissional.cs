@@ -6,7 +6,7 @@ using Talentos.Senai.Domains;
 
 namespace Talentos.Senai.Interfaces
 {
-    interface IExperienciaAcademica
+    interface IExperienciaProfissional
     {
         List<ExperienciaProfissional> Listar();
 

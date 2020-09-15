@@ -13,8 +13,9 @@ namespace Talentos.Senai.Repositories
     {
         private TalentosContext ctx = new TalentosContext();
         private readonly Functions _functions = new Functions();
+        private ITipoUsuario _tipoUsuarioRepository = new TipoUsuarioRepository();
         private readonly string table = "empresa";
-
+        
         public Empresa BuscarPorId(int id) => ctx.Empresa.FirstOrDefault(e => e.IdEmpresa == id);
         public List<Empresa> Listar() => ctx.Empresa.Include(e => e.IdTipoUsuarioNavigation).ToList();
 
@@ -24,31 +25,39 @@ namespace Talentos.Senai.Repositories
 
             if(empresaParaAtualizar != null)
             {
-                try
+                TipoUsuario tipoUsuarioBuscado = _tipoUsuarioRepository.BuscarPorId(empresaAtualizado.IdTipoUsuario.GetValueOrDefault());
+
+                if(tipoUsuarioBuscado != null)
                 {
-                    empresaParaAtualizar.Cnpj = empresaAtualizado.Cnpj ?? empresaParaAtualizar.Cnpj;
-                    empresaParaAtualizar.RazaoSocial = empresaAtualizado.RazaoSocial ?? empresaParaAtualizar.RazaoSocial;
-                    empresaParaAtualizar.Email = empresaAtualizado.Email ?? empresaParaAtualizar.Email;
-                    empresaParaAtualizar.Senha = empresaAtualizado.Senha ?? empresaParaAtualizar.Senha;
-                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica ?? empresaParaAtualizar.AtividadeEconomica;
-                    empresaParaAtualizar.TelefoneDois = empresaAtualizado.TelefoneDois ?? empresaParaAtualizar.TelefoneDois;
-                    empresaParaAtualizar.NomeFoto = empresaAtualizado.NomeFoto ?? empresaParaAtualizar.NomeFoto;
-                    empresaParaAtualizar.IdTipoUsuario = empresaAtualizado.IdTipoUsuario ?? empresaParaAtualizar.IdTipoUsuario;
-                    empresaParaAtualizar.DescricaoEmpresa = empresaAtualizado.DescricaoEmpresa ?? empresaParaAtualizar.DescricaoEmpresa;
-                    empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica ?? empresaParaAtualizar.Telefone;
+                    try
+                    {
+                        empresaParaAtualizar.Cnpj = empresaAtualizado.Cnpj ?? empresaParaAtualizar.Cnpj;
+                        empresaParaAtualizar.RazaoSocial = empresaAtualizado.RazaoSocial ?? empresaParaAtualizar.RazaoSocial;
+                        empresaParaAtualizar.Email = empresaAtualizado.Email ?? empresaParaAtualizar.Email;
+                        empresaParaAtualizar.Senha = empresaAtualizado.Senha ?? empresaParaAtualizar.Senha;
+                        empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica ?? empresaParaAtualizar.AtividadeEconomica;
+                        empresaParaAtualizar.TelefoneDois = empresaAtualizado.TelefoneDois ?? empresaParaAtualizar.TelefoneDois;
+                        empresaParaAtualizar.NomeFoto = empresaAtualizado.NomeFoto ?? empresaParaAtualizar.NomeFoto;
+                        empresaParaAtualizar.IdTipoUsuario = empresaAtualizado.IdTipoUsuario ?? empresaParaAtualizar.IdTipoUsuario;
+                        empresaParaAtualizar.DescricaoEmpresa = empresaAtualizado.DescricaoEmpresa ?? empresaParaAtualizar.DescricaoEmpresa;
+                        empresaParaAtualizar.AtividadeEconomica = empresaAtualizado.AtividadeEconomica ?? empresaParaAtualizar.Telefone;
 
-                    ctx.Empresa.Update(empresaParaAtualizar);
-                    ctx.SaveChanges();
+                        ctx.Empresa.Update(empresaParaAtualizar);
+                        ctx.SaveChanges();
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-
-                    return _functions.replyObject(okMessage, true);
-                }
-                catch (Exception error)
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                } else
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    string notFoundMessage = _functions.defaultMessage("tipousuario", "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
                 }
             }
             else
@@ -69,24 +78,33 @@ namespace Talentos.Senai.Repositories
 
             if (empresaExiste == null)
             {
-                try
-                {
-                    ctx.Empresa.Add(novoEmpresa);
-                    ctx.SaveChanges();
+                TipoUsuario tipoUsuarioBuscado = _tipoUsuarioRepository.BuscarPorId(novoEmpresa.IdTipoUsuario.GetValueOrDefault());
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                }catch(Exception error)
+                if(tipoUsuarioBuscado != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        ctx.Empresa.Add(novoEmpresa);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }catch(Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                } else
+                {
+                    string notFoundMessage = _functions.defaultMessage("tipousuario", "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
                 }
+
             }
             else
             {
                 string notFoundMessage= _functions.defaultMessage(table, "exists");
-
                 return _functions.replyObject(notFoundMessage, false);
             }
         }
@@ -119,7 +137,6 @@ namespace Talentos.Senai.Repositories
             else
             {
                 string notFoundMessage = _functions.defaultMessage(table, "notfound");
-
                 return _functions.replyObject(notFoundMessage, false);
             }
         }

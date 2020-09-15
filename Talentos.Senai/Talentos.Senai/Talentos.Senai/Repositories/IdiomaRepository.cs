@@ -29,7 +29,7 @@ namespace Talentos.Senai.Repositories
 
                 if(alunoBuscado == null)
                 {
-                    string notFoundMessaege = _functions.defaultMessage("aluno", "notfound");
+                    string notFoundMessaege = _functions.defaultMessage(table, "notfound");
                     return _functions.replyObject(notFoundMessaege, false);
                 }else
                 {
@@ -60,25 +60,33 @@ namespace Talentos.Senai.Repositories
 
             if(idiomaBuscado != null)
             {
-                try
+                Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+
+                if (alunoBuscado != null)
                 {
-                    idiomaBuscado.Idioma1 = data.Idioma1 ?? idiomaBuscado.Idioma1;
-                    idiomaBuscado.Nivel = data.Nivel ?? idiomaBuscado.Nivel;
-                    idiomaBuscado.IdAluno = data.IdAluno ?? idiomaBuscado.IdAluno;
+                    try
+                    {
+                        idiomaBuscado.Idioma1 = data.Idioma1 ?? idiomaBuscado.Idioma1;
+                        idiomaBuscado.Nivel = data.Nivel ?? idiomaBuscado.Nivel;
+                        idiomaBuscado.IdAluno = data.IdAluno ?? idiomaBuscado.IdAluno;
 
-                    ctx.Idioma.Update(idiomaBuscado);
-                    ctx.SaveChanges();
+                        ctx.Idioma.Update(idiomaBuscado);
+                        ctx.SaveChanges();
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
 
-                } catch(Exception error)
+                    } catch(Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                } else
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    string notFoundMessage = _functions.defaultMessage("aluno", "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
                 }
-
             } else
             {
                 string notFoundMessage = _functions.defaultMessage(table, "notfound");

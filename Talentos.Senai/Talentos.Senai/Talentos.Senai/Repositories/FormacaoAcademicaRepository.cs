@@ -13,6 +13,7 @@ namespace Talentos.Senai.Repositories
     {
         private TalentosContext ctx = new TalentosContext();
         private readonly Functions _functions = new Functions();
+        private IAluno _alunoRepository = new AlunoRepository();
         private readonly string table = "formacaoAcademica";
   
         public List<FormacaoAcademica> Listar() => ctx.FormacaoAcademica.Include(f => f.IdAlunoNavigation).ToList();
@@ -21,28 +22,35 @@ namespace Talentos.Senai.Repositories
 
         public TypeMessage Cadastrar(FormacaoAcademica data)
         {
-            FormacaoAcademica formacaoExistente = ctx.FormacaoAcademica.FirstOrDefault(f => f.IdFormacaoAcademica == data.IdFormacaoAcademica);
-
-            if (formacaoExistente == null)
+            if (data != null)
             {
-                try
+                Aluno alunobuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+
+                if(alunobuscado != null)
                 {
-                    ctx.FormacaoAcademica.Add(data);
-                    ctx.SaveChanges();
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                }
-                catch (Exception error)
+                    try
+                    {
+                        ctx.FormacaoAcademica.Add(data);
+                        ctx.SaveChanges();
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                }else
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
-                }
+                    string notFoundMessage = _functions.defaultMessage("aluno", "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
+                }    
             }
             else
             {
-                string existsMessage = _functions.defaultMessage(table, "exists");
-                return _functions.replyObject(existsMessage, false);
+                string dataMessage = _functions.defaultMessage(table, "data");
+                return _functions.replyObject(dataMessage, false);
             }
         }
 
@@ -52,28 +60,37 @@ namespace Talentos.Senai.Repositories
 
             if (formacaoParaAtualizar != null)
             {
-                try
-                {
-                    formacaoParaAtualizar.NomeCurso = dataFormacao.NomeCurso ?? formacaoParaAtualizar.NomeCurso ;
-                    formacaoParaAtualizar.Instituicao = dataFormacao.Instituicao ?? formacaoParaAtualizar.Instituicao;
-                    formacaoParaAtualizar.TipoCurso = dataFormacao.TipoCurso ?? formacaoParaAtualizar.TipoCurso;
-                    formacaoParaAtualizar.InicioCurso = dataFormacao.InicioCurso != null ? dataFormacao.InicioCurso : formacaoParaAtualizar.InicioCurso;
-                    formacaoParaAtualizar.TerminoCurso = dataFormacao.TerminoCurso != null ? dataFormacao.TerminoCurso : formacaoParaAtualizar.TerminoCurso;
-                    formacaoParaAtualizar.IdAluno = dataFormacao.IdAluno ?? formacaoParaAtualizar.IdAluno;
-                    
-                    ctx.FormacaoAcademica.Update(formacaoParaAtualizar);
-                    ctx.SaveChanges();
+                Aluno alunobuscado = _alunoRepository.BuscarPorId(dataFormacao.IdAluno.GetValueOrDefault());
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                }
-                catch (Exception error)
+                if(alunobuscado != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
-                }
+                    try
+                    {
+                        formacaoParaAtualizar.NomeCurso = dataFormacao.NomeCurso ?? formacaoParaAtualizar.NomeCurso;
+                        formacaoParaAtualizar.Instituicao = dataFormacao.Instituicao ?? formacaoParaAtualizar.Instituicao;
+                        formacaoParaAtualizar.TipoCurso = dataFormacao.TipoCurso ?? formacaoParaAtualizar.TipoCurso;
+                        formacaoParaAtualizar.InicioCurso = dataFormacao.InicioCurso != null ? dataFormacao.InicioCurso : formacaoParaAtualizar.InicioCurso;
+                        formacaoParaAtualizar.TerminoCurso = dataFormacao.TerminoCurso != null ? dataFormacao.TerminoCurso : formacaoParaAtualizar.TerminoCurso;
+                        formacaoParaAtualizar.IdAluno = dataFormacao.IdAluno ?? formacaoParaAtualizar.IdAluno;
 
+                        ctx.FormacaoAcademica.Update(formacaoParaAtualizar);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                }
+                else
+                {
+                    string notFoundMessage = _functions.defaultMessage("aluno", "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
+                }
             }
             else
             {

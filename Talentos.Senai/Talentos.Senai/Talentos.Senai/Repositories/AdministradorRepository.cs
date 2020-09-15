@@ -13,6 +13,7 @@ namespace Talentos.Senai.Repositories
     {
         private TalentosContext ctx = new TalentosContext();
         private readonly Functions _functions = new Functions();
+        private ITipoUsuario _tipoUsuarioRepository = new TipoUsuarioRepository();
         private readonly string table = "administrador";
 
         public List<Administrador> Listar() => ctx.Administrador.Include(a => a.IdTipoUsuarioNavigation).ToList();

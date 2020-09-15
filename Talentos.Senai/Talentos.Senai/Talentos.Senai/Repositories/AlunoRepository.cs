@@ -13,6 +13,8 @@ namespace Talentos.Senai.Repositories
     {
         private TalentosContext ctx = new TalentosContext();
         private readonly Functions _functions = new Functions();
+        private ITipoUsuario _tipoUsuarioRepository = new TipoUsuarioRepository();
+        private IEndereco _enderecoRepository = new EnderecoRepository();
         private readonly string table = "aluno";
 
         public List<Aluno> Listar() => ctx.Aluno.Include(a => a.IdEnderecoNavigation).Include(a => a.IdTipoUsuarioNavigation).ToList();
@@ -25,22 +27,33 @@ namespace Talentos.Senai.Repositories
 
             if(alunoExistente == null)
             {
-                try
-                {
-                    if (data.DataFormacao > DateTime.Now) data.IdTipoUsuario = 2;
-                    else data.IdTipoUsuario = 4;
+                TipoUsuario tipoUsuarioBuscado = _tipoUsuarioRepository.BuscarPorId(data.IdTipoUsuario.GetValueOrDefault());
+                Endereco enderecoBuscado = _enderecoRepository.BuscarPorId(data.IdEndereco.GetValueOrDefault());
 
-                    ctx.Aluno.Add(data);
-                    ctx.SaveChanges();
-
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                } catch(Exception error)
+                if(tipoUsuarioBuscado != null && enderecoBuscado != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        if (data.DataFormacao > DateTime.Now) data.IdTipoUsuario = 2;
+                        else data.IdTipoUsuario = 4;
+
+                        ctx.Aluno.Add(data);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    } catch(Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                } else
+                {
+                    string dataMessage = _functions.defaultMessage(table, "data");
+                    return _functions.replyObject(dataMessage, false);
                 }
+
             }
             else
             {
@@ -55,40 +68,51 @@ namespace Talentos.Senai.Repositories
 
             if(alunoParaAtualizar != null)
             {
-                try
-                {
-                    alunoParaAtualizar.Nome = dataAluno.Nome ?? alunoParaAtualizar.Nome;
-                    alunoParaAtualizar.Email = dataAluno.Email ?? alunoParaAtualizar.Email;
-                    alunoParaAtualizar.Senha = dataAluno.Senha ?? alunoParaAtualizar.Senha;
-                    alunoParaAtualizar.NomeSocial = dataAluno.NomeSocial ?? alunoParaAtualizar.NomeSocial;
-                    alunoParaAtualizar.Rg = dataAluno.Rg ?? alunoParaAtualizar.Rg;
-                    alunoParaAtualizar.Cpf = dataAluno.Cpf ?? alunoParaAtualizar.Cpf;
-                    alunoParaAtualizar.DataNascimento = dataAluno.DataNascimento != null ? dataAluno.DataNascimento : alunoParaAtualizar.DataNascimento;
-                    alunoParaAtualizar.Genero = dataAluno.Genero ?? alunoParaAtualizar.Genero;
-                    alunoParaAtualizar.CursoSenai = dataAluno.CursoSenai ??alunoParaAtualizar.CursoSenai;
-                    alunoParaAtualizar.DataFormacao = dataAluno.DataFormacao  != null ? dataAluno.DataFormacao : alunoParaAtualizar.DataFormacao;
-                    alunoParaAtualizar.Telefone = dataAluno.Telefone ?? alunoParaAtualizar.Telefone;
-                    alunoParaAtualizar.TipoDefiencia = dataAluno.TipoDefiencia ?? alunoParaAtualizar.TipoDefiencia;
-                    alunoParaAtualizar.DetalheDeficiencia = dataAluno.DetalheDeficiencia ?? alunoParaAtualizar.DetalheDeficiencia;
-                    alunoParaAtualizar.PreferenciaArea = dataAluno.PreferenciaArea ?? alunoParaAtualizar.PreferenciaArea;
-                    alunoParaAtualizar.Descricao = dataAluno.Descricao ?? alunoParaAtualizar.Descricao;
-                    alunoParaAtualizar.Linkedin = dataAluno.Linkedin ?? alunoParaAtualizar.Linkedin;
-                    alunoParaAtualizar.GitHub = dataAluno.GitHub ?? alunoParaAtualizar.GitHub;
-                    alunoParaAtualizar.NomeFoto = dataAluno.NomeFoto ?? alunoParaAtualizar.NomeFoto;
-                    alunoParaAtualizar.PerfilComportamental = dataAluno.PerfilComportamental ?? alunoParaAtualizar.PerfilComportamental;
-                    alunoParaAtualizar.IdTipoUsuario = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdTipoUsuario;
-                    alunoParaAtualizar.IdEndereco = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdEndereco;
+                TipoUsuario tipoUsuarioBuscado = _tipoUsuarioRepository.BuscarPorId(dataAluno.IdTipoUsuario.GetValueOrDefault());
+                Endereco enderecoBuscado = _enderecoRepository.BuscarPorId(dataAluno.IdEndereco.GetValueOrDefault());
 
-                    ctx.Aluno.Update(alunoParaAtualizar);
-                    ctx.SaveChanges();
-
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                } catch(Exception error)
+                if(tipoUsuarioBuscado != null && enderecoBuscado != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        alunoParaAtualizar.Nome = dataAluno.Nome ?? alunoParaAtualizar.Nome;
+                        alunoParaAtualizar.Email = dataAluno.Email ?? alunoParaAtualizar.Email;
+                        alunoParaAtualizar.Senha = dataAluno.Senha ?? alunoParaAtualizar.Senha;
+                        alunoParaAtualizar.NomeSocial = dataAluno.NomeSocial ?? alunoParaAtualizar.NomeSocial;
+                        alunoParaAtualizar.Rg = dataAluno.Rg ?? alunoParaAtualizar.Rg;
+                        alunoParaAtualizar.Cpf = dataAluno.Cpf ?? alunoParaAtualizar.Cpf;
+                        alunoParaAtualizar.DataNascimento = dataAluno.DataNascimento != null ? dataAluno.DataNascimento : alunoParaAtualizar.DataNascimento;
+                        alunoParaAtualizar.Genero = dataAluno.Genero ?? alunoParaAtualizar.Genero;
+                        alunoParaAtualizar.CursoSenai = dataAluno.CursoSenai ??alunoParaAtualizar.CursoSenai;
+                        alunoParaAtualizar.DataFormacao = dataAluno.DataFormacao  != null ? dataAluno.DataFormacao : alunoParaAtualizar.DataFormacao;
+                        alunoParaAtualizar.Telefone = dataAluno.Telefone ?? alunoParaAtualizar.Telefone;
+                        alunoParaAtualizar.TipoDefiencia = dataAluno.TipoDefiencia ?? alunoParaAtualizar.TipoDefiencia;
+                        alunoParaAtualizar.DetalheDeficiencia = dataAluno.DetalheDeficiencia ?? alunoParaAtualizar.DetalheDeficiencia;
+                        alunoParaAtualizar.PreferenciaArea = dataAluno.PreferenciaArea ?? alunoParaAtualizar.PreferenciaArea;
+                        alunoParaAtualizar.Descricao = dataAluno.Descricao ?? alunoParaAtualizar.Descricao;
+                        alunoParaAtualizar.Linkedin = dataAluno.Linkedin ?? alunoParaAtualizar.Linkedin;
+                        alunoParaAtualizar.GitHub = dataAluno.GitHub ?? alunoParaAtualizar.GitHub;
+                        alunoParaAtualizar.NomeFoto = dataAluno.NomeFoto ?? alunoParaAtualizar.NomeFoto;
+                        alunoParaAtualizar.PerfilComportamental = dataAluno.PerfilComportamental ?? alunoParaAtualizar.PerfilComportamental;
+                        alunoParaAtualizar.IdTipoUsuario = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdTipoUsuario;
+                        alunoParaAtualizar.IdEndereco = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdEndereco;
+
+                        ctx.Aluno.Update(alunoParaAtualizar);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    } catch(Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+
+                } else
+                {
+                    string dataMessage = _functions.defaultMessage(table, "data");
+                    return _functions.replyObject(dataMessage, false);
                 }
 
             } 

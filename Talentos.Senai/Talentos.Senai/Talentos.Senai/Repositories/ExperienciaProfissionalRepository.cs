@@ -13,36 +13,44 @@ namespace Talentos.Senai.Repositories
     {
             private TalentosContext ctx = new TalentosContext();
             private readonly Functions _functions = new Functions();
+            private IAluno _alunoRepository = new AlunoRepository();
             private readonly string table = "experienciaProfissional";
 
             public List<ExperienciaProfissional> Listar() => ctx.ExperienciaProfissional.Include(f => f.IdAlunoNavigation).ToList();
 
-            public ExperienciaProfissional BuscarPorId(int id) => ctx.ExperienciaProfissional.FirstOrDefault(e => e.IdExperienciaProfissional == id);
+            public ExperienciaProfissional BuscarPorId(int id) => ctx.ExperienciaProfissional.Include(e => e.IdAluno).FirstOrDefault(e => e.IdExperienciaProfissional == id);
 
             public TypeMessage Cadastrar(ExperienciaProfissional data)
             {
-              ExperienciaProfissional experienciaExistente = ctx.ExperienciaProfissional.FirstOrDefault(e => e.IdExperienciaProfissional == data.IdExperienciaProfissional);
-
-                if (experienciaExistente == null)
+                if (data != null)
                 {
-                    try
+                    Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+
+                    if (alunoBuscado != null)
                     {
-                        ctx.ExperienciaProfissional.Add(data);
-                        ctx.SaveChanges();
-                        string okMessage = _functions.defaultMessage(table, "ok");
-                        return _functions.replyObject(okMessage, true);
-                    }
-                    catch (Exception error)
+                        try
+                        {
+                            ctx.ExperienciaProfissional.Add(data);
+                            ctx.SaveChanges();
+                            string okMessage = _functions.defaultMessage(table, "ok");
+                            return _functions.replyObject(okMessage, true);
+                        }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine(error);
+                            string errorMessage = _functions.defaultMessage(table, "error");
+                            return _functions.replyObject(errorMessage, false);
+                        }
+                    } else
                     {
-                        Console.WriteLine(error);
-                        string errorMessage = _functions.defaultMessage(table, "error");
-                        return _functions.replyObject(errorMessage, false);
+                        string notFoundMessage = _functions.defaultMessage("aluno", "notfound");
+                        return _functions.replyObject(notFoundMessage, false);
                     }
                 }
                 else
                 {
-                    string existsMessage = _functions.defaultMessage(table, "exists");
-                    return _functions.replyObject(existsMessage, false);
+                    string dataMessage = _functions.defaultMessage(table, "data");
+                    return _functions.replyObject(dataMessage, false);
                 }
             }
 
@@ -52,27 +60,37 @@ namespace Talentos.Senai.Repositories
 
                 if (experienciaParaAtualizar != null)
                 {
-                    try
-                    {
-                        experienciaParaAtualizar.Empresa = dataExperiencia.Empresa ?? experienciaParaAtualizar. Empresa;
-                        experienciaParaAtualizar.Cargo = dataExperiencia.Cargo ?? experienciaParaAtualizar.Cargo;
-                        experienciaParaAtualizar.Descricao = dataExperiencia.Descricao ?? experienciaParaAtualizar.Descricao;
-                        experienciaParaAtualizar.DataInico = dataExperiencia.DataInico != null ? dataExperiencia.DataInico : experienciaParaAtualizar.DataInico;
-                        experienciaParaAtualizar.DataFim = dataExperiencia.DataFim != null ? dataExperiencia.DataFim : experienciaParaAtualizar.DataFim;
-                        experienciaParaAtualizar.IdAluno = dataExperiencia.IdAluno ?? experienciaParaAtualizar.IdAluno;
+                    Aluno alunoBuscado = _alunoRepository.BuscarPorId(dataExperiencia.IdAluno.GetValueOrDefault());
 
-                        ctx.ExperienciaProfissional.Update(experienciaParaAtualizar);
-                        ctx.SaveChanges();
-
-                        string okMessage = _functions.defaultMessage(table, "ok");
-                        return _functions.replyObject(okMessage, true);
-                    }
-                    catch (Exception error)
+                    if(alunoBuscado != null)
                     {
-                        Console.WriteLine(error);
-                        string errorMessage = _functions.defaultMessage(table, "error");
-                        return _functions.replyObject(errorMessage, false);
+                        try
+                        {
+                            experienciaParaAtualizar.Empresa = dataExperiencia.Empresa ?? experienciaParaAtualizar. Empresa;
+                            experienciaParaAtualizar.Cargo = dataExperiencia.Cargo ?? experienciaParaAtualizar.Cargo;
+                            experienciaParaAtualizar.Descricao = dataExperiencia.Descricao ?? experienciaParaAtualizar.Descricao;
+                            experienciaParaAtualizar.DataInico = dataExperiencia.DataInico != null ? dataExperiencia.DataInico : experienciaParaAtualizar.DataInico;
+                            experienciaParaAtualizar.DataFim = dataExperiencia.DataFim != null ? dataExperiencia.DataFim : experienciaParaAtualizar.DataFim;
+                            experienciaParaAtualizar.IdAluno = dataExperiencia.IdAluno ?? experienciaParaAtualizar.IdAluno;
+
+                            ctx.ExperienciaProfissional.Update(experienciaParaAtualizar);
+                            ctx.SaveChanges();
+
+                            string okMessage = _functions.defaultMessage(table, "ok");
+                            return _functions.replyObject(okMessage, true);
+                        }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine(error);
+                            string errorMessage = _functions.defaultMessage(table, "error");
+                            return _functions.replyObject(errorMessage, false);
+                        }
+                    } else
+                    {
+                        string notFoundMessage = _functions.defaultMessage("aluno", "notfound");
+                        return _functions.replyObject(notFoundMessage, false);
                     }
+
 
                 }
                 else
