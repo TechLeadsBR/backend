@@ -43,6 +43,18 @@
       "frameworks": {
         "netcoreapp2.1": {
           "dependencies": {
+            "IdentityServer4": {
+              "target": "Package",
+              "version": "[2.0.2, )"
+            },
+            "IdentityServer4.AccessTokenValidation": {
+              "target": "Package",
+              "version": "[2.0.2, )"
+            },
+            "IdentityServer4.EntityFramework": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
             "Microsoft.AspNetCore.App": {
               "suppressParent": "All",
               "target": "Package",
