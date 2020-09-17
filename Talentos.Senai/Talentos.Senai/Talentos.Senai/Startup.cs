@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 namespace Talentos.Senai
@@ -31,6 +32,28 @@ namespace Talentos.Senai
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
+
+            // JWT Configuration
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = "JwtBearer";
+                    options.DefaultAuthenticateScheme = "JwtBearer";
+                })
+                .AddJwtBearer("JwtBearer",
+                options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("talentos.key.autentication")),
+                        ClockSkew = TimeSpan.FromMinutes(30),
+                        ValidIssuer = "talentos.senai.api",
+                        ValidAudience = "talentos.senai.api"
+                    };
+                });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -39,6 +62,9 @@ namespace Talentos.Senai
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // JWT
+            app.UseAuthentication();
 
             app.UseMvc();
         }
