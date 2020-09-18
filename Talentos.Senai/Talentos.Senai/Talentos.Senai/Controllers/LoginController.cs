@@ -29,12 +29,17 @@ namespace Talentos.Senai.Controllers
             Usuario usuarioBuscado = _loginRepository.BuscarUsuario(data);
             if (usuarioBuscado.aluno == null && usuarioBuscado.empresa == null) return BadRequest(new { message = "E-mail ou senha invalido" });
 
+            if(usuarioBuscado.aluno != null)
+            {
+                return Ok(_loginRepository.CreateToken(usuarioBuscado.aluno.Email, usuarioBuscado.aluno.IdAluno.ToString(), usuarioBuscado.aluno.IdTipoUsuario.ToString()));
+            }else if(usuarioBuscado.empresa != null)
+            {
+                return Ok(_loginRepository.CreateToken(usuarioBuscado.empresa.Email, usuarioBuscado.empresa.IdEmpresa.ToString() ,usuarioBuscado.empresa.IdTipoUsuario.ToString()));
+            } else
+            {
+                return BadRequest(new { error = true, message = "ocorreu um erro" });
+            }
 
-            return Ok(
-                
-                     _loginRepository.CreateToken((usuarioBuscado.aluno.Email ?? usuarioBuscado.empresa.Email),
-                (usuarioBuscado.aluno.IdTipoUsuario.ToString() ?? usuarioBuscado.empresa.IdTipoUsuario.ToString()))
-            );
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
@@ -33,6 +34,7 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        [Authorize(Roles = "3")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, InscricaoEmprego data)
         {
@@ -41,6 +43,7 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        [Authorize(Roles = "3")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

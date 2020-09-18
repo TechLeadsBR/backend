@@ -29,14 +29,15 @@ namespace Talentos.Senai.Repositories
             };
         }
 
-        public string CreateToken(string email, string tipoUsuario)
+        public object CreateToken(string email, string idUsuario, string tipoUsuario)
         {
             var claims = new Claim[]
             {
-                new Claim(JwtRegisteredClaimNames.Email, email),
-                new Claim(JwtRegisteredClaimNames.Jti, tipoUsuario.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, email.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, idUsuario.ToString()),
                 new Claim(ClaimTypes.Role, tipoUsuario.ToString())
             };
+            
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("talentos.key.autentication"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -49,7 +50,10 @@ namespace Talentos.Senai.Repositories
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
         }
     }
 }

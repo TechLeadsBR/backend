@@ -38,7 +38,7 @@ namespace Talentos.Senai
                 .AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = "JwtBearer";
-                    options.DefaultAuthenticateScheme = "JwtBearer";
+                    options.DefaultChallengeScheme = "JwtBearer";
                 })
                 .AddJwtBearer("JwtBearer",
                 options =>

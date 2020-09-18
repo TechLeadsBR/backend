@@ -16,6 +16,6 @@ namespace Talentos.Senai.Interfaces
 
         Usuario BuscarUsuario(LoginViewModel data);
 
-        string CreateToken(string email, string tipoUsuario);
+        object CreateToken(string email, string idUsuario, string tipoUsuario);
     }
 }
