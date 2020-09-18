@@ -32,6 +32,15 @@ namespace Talentos.Senai.Controllers
         public IActionResult Get() => Ok(_vagaEmpregoRepository.Listar());
 
         /// <summary>
+        /// Lista vagas de emprego de acordo com o filtro
+        /// </summary>
+        /// <param name="palavra"></param>
+        /// <returns></returns>
+        //[Authorize(Roles = "1, 2, 3")]
+        [HttpGet("{palavra}")]
+        public IActionResult Get(string palavra) => Ok(_vagaEmpregoRepository.FiltroGeral(palavra));
+
+        /// <summary>
         /// Cadastra uma Vaga de Emprego
         /// </summary>
         /// <param name="data"></param>
