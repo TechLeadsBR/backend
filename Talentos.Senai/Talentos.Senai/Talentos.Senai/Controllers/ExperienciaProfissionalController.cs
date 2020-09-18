@@ -24,10 +24,16 @@ namespace Talentos.Senai.Controllers
 
         }
 
+        /// <summary>
+        /// Lista todas Experiencias Profissional
+        /// </summary>
         [Authorize(Roles = "1, 2")]
         [HttpGet]
         public IActionResult Get() => Ok(_experienciaProfissionalRepository.Listar());
 
+        /// <summary>
+        /// Cadastra uma Experiencia Profissional
+        /// </summary>
         [Authorize(Roles = "1, 2")]
         [HttpPost]
         public IActionResult Post(ExperienciaProfissional data)
@@ -37,6 +43,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza uma Experiencia Profissional
+        /// </summary>
         [Authorize(Roles = "1, 2")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, ExperienciaProfissional data)
@@ -46,6 +55,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta uma Experiencia Profissional
+        /// </summary>
         [Authorize(Roles = "1, 2")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

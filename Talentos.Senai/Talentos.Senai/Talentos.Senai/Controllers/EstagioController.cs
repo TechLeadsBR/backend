@@ -23,10 +23,18 @@ namespace Talentos.Senai.Controllers
             _estagioRepository = new EstagioRepository();
         }
 
+        /// <summary>
+        /// Lista todos os Estagios
+        /// </summary>
+        /// <returns>Retorna uma lista de estudios</returns>
         [Authorize(Roles = "1")]
         [HttpGet]
         public IActionResult Get() => Ok(_estagioRepository.Listar());
 
+        /// <summary>
+        /// Cadastra um Estagio
+        /// </summary>
+        /// <param name="data">Objeto novoEstudio que será cadastrado</param>
         [Authorize(Roles = "1")]
         [HttpPost]
         public IActionResult Post(Estagio data)
@@ -36,6 +44,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza um Estagio
+        /// </summary>
         [Authorize(Roles = "1")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Estagio data)
@@ -45,6 +56,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta um Estagio
+        /// </summary>
         [Authorize(Roles = "1")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

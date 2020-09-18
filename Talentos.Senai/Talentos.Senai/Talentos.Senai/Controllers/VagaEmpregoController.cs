@@ -23,10 +23,19 @@ namespace Talentos.Senai.Controllers
             _vagaEmpregoRepository = new VagaEmpregoRepository();
         }
 
+        /// <summary>
+        /// Lista Todas Vagas de Emprego
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "1, 2, 3")]
         [HttpGet]
         public IActionResult Get() => Ok(_vagaEmpregoRepository.Listar());
 
+        /// <summary>
+        /// Cadastra uma Vaga de Emprego
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [Authorize(Roles = "1, 3")]
         [HttpPost]
         public IActionResult Post(VagaEmprego data)
@@ -36,6 +45,12 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza uma Vaga de Emprego
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [Authorize(Roles = "1, 3")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, VagaEmprego data)
@@ -45,6 +60,11 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta uma Vaga de Emprego
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "1, 3")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
