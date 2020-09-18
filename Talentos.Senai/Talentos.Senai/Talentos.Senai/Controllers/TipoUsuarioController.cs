@@ -22,9 +22,18 @@ namespace Talentos.Senai.Controllers
             _tipoUsuarioRepository = new TipoUsuarioRepository();
         }
 
+        /// <summary>
+        /// Lista todos Tipos de usuario
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Get() => Ok(_tipoUsuarioRepository.Listar());
 
+        /// <summary>
+        /// Cadastra um Tipo Usuario
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Post(TipoUsuario data)
         {
@@ -33,6 +42,12 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza um Tipo Usuario
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult Put(TipoUsuario data, int id)
         {
@@ -41,6 +56,11 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta um Tipo usuario
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

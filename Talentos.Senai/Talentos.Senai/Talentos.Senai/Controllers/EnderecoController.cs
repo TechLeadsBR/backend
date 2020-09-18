@@ -22,14 +22,22 @@ namespace Talentos.Senai.Controllers
             _enderecoRepository = new EnderecoRepository();
         }
 
+
+        /// <summary>
+        /// Lista todos Endereços
+        /// </summary>
         [HttpGet]
         public IActionResult Get() => Ok(_enderecoRepository.Listar());
-    
 
+        /// <summary>
+        /// Lista Endereços Por Id
+        /// </summary>
         [HttpGet("{id}")]
         public IActionResult GetById(int id) => Ok(_enderecoRepository.BuscarPorId(id));
 
-
+        /// <summary>
+        /// Cadastra um Endereço
+        /// </summary>
         [HttpPost]
         public IActionResult Post(Endereco novoEndereco)
         {
@@ -38,6 +46,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza um Endereço
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Put(int id, Endereco enderecoAtualizado)
         {
@@ -46,6 +57,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta um Endereço
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

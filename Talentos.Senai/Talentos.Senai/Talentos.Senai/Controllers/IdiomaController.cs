@@ -22,9 +22,15 @@ namespace Talentos.Senai.Controllers
             _idiomaRepository = new IdiomaRepository();
         }
 
+        /// <summary>
+        /// Lista todos os Idiomas
+        /// </summary>
         [HttpGet]
         public IActionResult Get() => Ok(_idiomaRepository.Listar());
 
+        /// <summary>
+        /// Cadastra um Idioma
+        /// </summary>
         [HttpPost]
         public IActionResult Post(Idioma data)
         {
@@ -33,6 +39,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza um Idioma
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Put(int id, Idioma data)
         {
@@ -41,6 +50,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta um Idioma
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

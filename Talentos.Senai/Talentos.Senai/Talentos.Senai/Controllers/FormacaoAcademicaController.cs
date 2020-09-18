@@ -23,9 +23,15 @@ namespace Talentos.Senai.Controllers
 
         }
 
+        /// <summary>
+        /// Lista todas Formações Academica
+        /// </summary>
         [HttpGet]
         public IActionResult Get() => Ok(_formacaoAcademicaRepository.Listar());
 
+        /// <summary>
+        /// Cadastra uma Formação Academica
+        /// </summary>
         [HttpPost]
         public IActionResult Post(FormacaoAcademica data)
         {
@@ -34,6 +40,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza uma Formação Academica
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Put(int id, FormacaoAcademica data)
         {
@@ -42,6 +51,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta uma Formação Academica
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

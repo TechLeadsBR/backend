@@ -10,6 +10,10 @@ using Talentos.Senai.Repositories;
 
 namespace Talentos.Senai.Controllers
 {
+    /// <summary>
+    /// Controller responsável pelos endpoints responsaveis pelo Administrdor
+    /// </summary>
+
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
@@ -22,9 +26,15 @@ namespace Talentos.Senai.Controllers
             _administradorRepository = new AdministradorRepository();
         }
 
+        /// <summary>
+        /// Lista todos os administradores
+        /// </summary>
         [HttpGet]
         public IActionResult Get() => Ok(_administradorRepository.Listar());
 
+        /// <summary>
+        /// Cadastra um administrador
+        /// </summary>
         [HttpPost]
         public IActionResult Post(Administrador data)
         {
@@ -33,6 +43,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza um administrador
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Put(int id, Administrador data)
         {
@@ -41,6 +54,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta um administrador
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

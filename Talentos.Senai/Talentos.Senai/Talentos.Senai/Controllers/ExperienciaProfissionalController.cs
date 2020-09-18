@@ -23,9 +23,15 @@ namespace Talentos.Senai.Controllers
 
         }
 
+        /// <summary>
+        /// Lista todas Experiencias Profissional
+        /// </summary>
         [HttpGet]
         public IActionResult Get() => Ok(_experienciaProfissionalRepository.Listar());
 
+        /// <summary>
+        /// Cadastra uma Experiencia Profissional
+        /// </summary>
         [HttpPost]
         public IActionResult Post(ExperienciaProfissional data)
         {
@@ -34,6 +40,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza uma Experiencia Profissional
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Put(int id, ExperienciaProfissional data)
         {
@@ -42,6 +51,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta uma Experiencia Profissional
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

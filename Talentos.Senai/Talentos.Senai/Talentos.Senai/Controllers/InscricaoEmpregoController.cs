@@ -22,9 +22,15 @@ namespace Talentos.Senai.Controllers
             _inscricaoEmpregoRepository = new InscricaoEmpregoRepository();
         }
 
+        /// <summary>
+        /// Lista todas Inscrições de Empregos
+        /// </summary>
         [HttpGet]
         public IActionResult Get() => Ok(_inscricaoEmpregoRepository.Listar());
 
+        /// <summary>
+        /// Cadastra uma Inscricao de Emprego
+        /// </summary>
         [HttpPost]
         public IActionResult Post(InscricaoEmprego data)
         {
@@ -33,6 +39,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza uma Inscricao de Emprego
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Put(int id, InscricaoEmprego data)
         {
@@ -41,6 +50,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta uma Inscricao de Emprego
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

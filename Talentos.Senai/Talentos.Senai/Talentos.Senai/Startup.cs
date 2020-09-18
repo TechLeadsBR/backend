@@ -10,6 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Reflection;
+using System.IO;
+using Microsoft.OpenApi.Models;
 
 namespace Talentos.Senai
 {
@@ -31,6 +34,16 @@ namespace Talentos.Senai
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
+
+            // swagger configuration
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Talentos.Senai.WebApi", Version = "v1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -39,6 +52,14 @@ namespace Talentos.Senai
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // swagger
+            app.UseSwagger()
+               .UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Talentos.Senai.WebApi");
+                    c.RoutePrefix = string.Empty;
+                });
 
             app.UseMvc();
         }

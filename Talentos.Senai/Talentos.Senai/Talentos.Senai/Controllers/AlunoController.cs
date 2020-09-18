@@ -22,9 +22,15 @@ namespace Talentos.Senai.Controllers
             _alunoRepository = new AlunoRepository();
         }
 
+        /// <summary>
+        /// Listar todos Alunos
+        /// </summary>
         [HttpGet]
         public IActionResult Get() => Ok(_alunoRepository.Listar());
 
+        /// <summary>
+        /// Cadastra um Aluno
+        /// </summary>
         [HttpPost]
         public IActionResult Post(Aluno data)
         {
@@ -33,6 +39,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza um Aluno
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno data)
         {
@@ -41,6 +50,9 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta um Aluno
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

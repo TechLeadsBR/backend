@@ -24,9 +24,18 @@ namespace Talentos.Senai.Controllers
             _empresaRepository = new EmpresaRepository();
         }
 
+        /// <summary>
+        /// Lista todas Empresas
+        /// </summary>
+        /// <returns>Retorna uma lista de Empresas</returns>
         [HttpGet]
         public IActionResult Get() => Ok(_empresaRepository.Listar());
 
+        /// <summary>
+        /// Cadastra uma Empresa
+        /// </summary>
+        /// <param name="novoEmpresa"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Post(Empresa novoEmpresa)
         {
@@ -35,6 +44,11 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Deleta uma Empresa
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -43,6 +57,12 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        /// <summary>
+        /// Atualiza uma Empresa
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="empresaAtualizado"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult Put(int id, Empresa empresaAtualizado)
         {
