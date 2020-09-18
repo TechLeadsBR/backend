@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
@@ -24,6 +25,7 @@ namespace Talentos.Senai.Controllers
             _empresaRepository = new EmpresaRepository();
         }
 
+        [Authorize(Roles = "1, 2")]
         [HttpGet]
         public IActionResult Get() => Ok(_empresaRepository.Listar());
 
@@ -35,6 +37,7 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        [Authorize(Roles = "1, 3")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -43,6 +46,7 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        [Authorize(Roles = "1")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Empresa empresaAtualizado)
         {

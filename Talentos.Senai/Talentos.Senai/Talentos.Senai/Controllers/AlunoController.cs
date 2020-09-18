@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
@@ -22,6 +23,7 @@ namespace Talentos.Senai.Controllers
             _alunoRepository = new AlunoRepository();
         }
 
+        [Authorize(Roles = "1")]
         [HttpGet]
         public IActionResult Get() => Ok(_alunoRepository.Listar());
 
@@ -33,6 +35,7 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        [Authorize(Roles = "1, 2")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno data)
         {
@@ -41,6 +44,7 @@ namespace Talentos.Senai.Controllers
             else return BadRequest(returnRepository);
         }
 
+        [Authorize(Roles = "1, 2")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

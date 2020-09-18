@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
@@ -22,10 +23,11 @@ namespace Talentos.Senai.Controllers
             _enderecoRepository = new EnderecoRepository();
         }
 
+        [Authorize(Roles = "1, 2, 3, 4")]
         [HttpGet]
         public IActionResult Get() => Ok(_enderecoRepository.Listar());
-    
 
+        [Authorize(Roles = "1")]
         [HttpGet("{id}")]
         public IActionResult GetById(int id) => Ok(_enderecoRepository.BuscarPorId(id));
 
