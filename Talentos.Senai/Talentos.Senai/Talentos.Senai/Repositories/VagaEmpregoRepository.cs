@@ -20,6 +20,8 @@ namespace Talentos.Senai.Repositories
 
         public VagaEmprego BuscarPorId(int id) => ctx.VagaEmprego.FirstOrDefault(v => v.IdVagaEmprego == id);
 
+        public List<VagaEmprego> FiltroGeral(string palavra) => ctx.VagaEmprego.FromSql($"EXEC FiltroVagaDeEmprego {palavra}").ToList();
+
         public TypeMessage Cadastrar(VagaEmprego data)
         {
             if (data != null)

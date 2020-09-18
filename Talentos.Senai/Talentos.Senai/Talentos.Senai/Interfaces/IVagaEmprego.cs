@@ -12,6 +12,8 @@ namespace Talentos.Senai.Interfaces
 
         VagaEmprego BuscarPorId(int id);
 
+        List<VagaEmprego> FiltroGeral(string palavra);
+
         TypeMessage Cadastrar(VagaEmprego data);
 
         TypeMessage Atualizar(int id, VagaEmprego data);
