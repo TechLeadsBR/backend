@@ -26,6 +26,9 @@ namespace Talentos.Senai
 
         public IConfiguration Configuration { get; }
 
+        // cors
+        readonly string MyAllowSpecificOrigins = "react.front";
+
         public void ConfigureServices(IServiceCollection services)
         {
             services
@@ -34,6 +37,16 @@ namespace Talentos.Senai
                 .AddJsonOptions(options => {
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
+
+            // Cors configuration
+            services
+                .AddCors(options =>
+                {
+                    options.AddPolicy(name: MyAllowSpecificOrigins, builder =>
+                    {
+                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    });
                 });
 
             // swagger configuration
@@ -76,6 +89,9 @@ namespace Talentos.Senai
                 app.UseDeveloperExceptionPage();
             }
 
+            // cors
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             // swagger
             app.UseSwagger()
                .UseSwaggerUI(c =>
@@ -86,6 +102,7 @@ namespace Talentos.Senai
 
             // JWT
             app.UseAuthentication();
+
 
             app.UseMvc();
         }
