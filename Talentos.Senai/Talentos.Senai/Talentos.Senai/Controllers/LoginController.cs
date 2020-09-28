@@ -38,5 +38,13 @@ namespace Talentos.Senai.Controllers
             if (loginEmpresa.ok) return Ok(loginEmpresa);
             else return BadRequest(loginEmpresa);
         }
+
+        [HttpPost("administrador")]
+        public IActionResult LoginAdministrador(LoginViewModel data)
+        {
+            TypeMessage loginAdministrador = _loginRepository.BuscarAdministrador(data);
+            if (loginAdministrador.ok) return Ok(loginAdministrador);
+            else return BadRequest(loginAdministrador);
+        }
     }
 }

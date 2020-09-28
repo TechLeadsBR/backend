@@ -52,7 +52,15 @@ namespace Talentos.Senai.Repositories
 
         public TypeMessage BuscarAdministrador(LoginViewModel data)
         {
-            return _function.replyObject("asdasd", true);
+            Administrador administradorBuscado = ctx.Administrador.FirstOrDefault(a => a.Email == data.email && a.Senha == data.senha);
+            if(administradorBuscado != null)
+            {
+                var token = CreateToken(administradorBuscado.Email, administradorBuscado.IdAdministrador.ToString(), administradorBuscado.IdTipoUsuario.ToString());
+                return _function.replyObject(token.ToString(), true);
+            }else
+            {
+                return _function.replyObject(_notFoundUser, false);
+            }
         }
 
         public object CreateToken(string email, string idUsuario, string tipoUsuario)
