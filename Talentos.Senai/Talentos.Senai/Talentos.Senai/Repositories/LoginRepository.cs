@@ -6,8 +6,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Talentos.Senai.Domains;
-using Talentos.Senai.General;
 using Talentos.Senai.Interfaces;
+using Talentos.Senai.Utilities;
 using Talentos.Senai.ViewModels;
 
 namespace Talentos.Senai.Repositories
@@ -15,18 +15,44 @@ namespace Talentos.Senai.Repositories
     public class LoginRepository : ILogin
     {
         private TalentosContext ctx = new TalentosContext();
+        private readonly Functions _function = new Functions();
+        private string _notFoundUser;
 
-        public Aluno BuscarAluno(LoginViewModel data) => ctx.Aluno.FirstOrDefault(a => a.Email == data.email && a.Senha == data.senha);
-
-        public Empresa BuscarEmpresa(LoginViewModel data) => ctx.Empresa.FirstOrDefault(e => e.Email == data.email && e.Senha == data.senha);
-
-        public Usuario BuscarUsuario(LoginViewModel data)
+        public LoginRepository()
         {
-            return new Usuario
+            _notFoundUser = "E-mail ou senha inválidos";
+        }
+
+        public TypeMessage BuscarAluno(LoginViewModel data)
+        {
+            Aluno alunoBuscado = ctx.Aluno.FirstOrDefault(a => a.Email == data.email && a.Senha == data.senha);
+            if(alunoBuscado != null)
             {
-                aluno = BuscarAluno(data),
-                empresa = BuscarEmpresa(data)
-            };
+                var token = CreateToken(alunoBuscado.Email, alunoBuscado.IdAluno.ToString(), alunoBuscado.IdTipoUsuario.ToString());
+                return _function.replyObject(token.ToString(), true);
+            }else
+            {
+                string message = "E-mail ou senha inválidos";
+                return _function.replyObject(message, false);
+            }
+        }
+
+        public TypeMessage BuscarEmpresa(LoginViewModel data)
+        {
+            Empresa empresaBuscada = ctx.Empresa.FirstOrDefault(e => e.Email == data.email && e.Senha == data.senha);
+            if(empresaBuscada != null)
+            {
+                var token = CreateToken(empresaBuscada.Email, empresaBuscada.IdEmpresa.ToString(), empresaBuscada.IdTipoUsuario.ToString());
+                return _function.replyObject(token.ToString(), true);
+            }else
+            {
+                return _function.replyObject(_notFoundUser, false);
+            }
+        }
+
+        public TypeMessage BuscarAdministrador(LoginViewModel data)
+        {
+            return _function.replyObject("asdasd", true);
         }
 
         public object CreateToken(string email, string idUsuario, string tipoUsuario)
@@ -50,10 +76,7 @@ namespace Talentos.Senai.Repositories
                 signingCredentials: creds
             );
 
-            return new
-            {
-                token = new JwtSecurityTokenHandler().WriteToken(token)
-            };
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

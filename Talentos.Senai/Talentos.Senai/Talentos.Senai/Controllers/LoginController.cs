@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Talentos.Senai.General;
+using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
 using Talentos.Senai.ViewModels;
@@ -23,23 +23,20 @@ namespace Talentos.Senai.Controllers
             _loginRepository = new LoginRepository();
         }
 
-        [HttpPost]
-        public IActionResult Login(LoginViewModel data)
+        [HttpPost("aluno")]
+        public IActionResult LoginAluno(LoginViewModel data)
         {
-            Usuario usuarioBuscado = _loginRepository.BuscarUsuario(data);
-            if (usuarioBuscado.aluno == null && usuarioBuscado.empresa == null) return BadRequest(new { message = "E-mail ou senha invalido" });
+            TypeMessage loginAluno = _loginRepository.BuscarAluno(data);
+            if (loginAluno.ok) return Ok(loginAluno);
+            else return BadRequest(loginAluno);
+        }
 
-            if(usuarioBuscado.aluno != null)
-            {
-                return Ok(_loginRepository.CreateToken(usuarioBuscado.aluno.Email, usuarioBuscado.aluno.IdAluno.ToString(), usuarioBuscado.aluno.IdTipoUsuario.ToString()));
-            }else if(usuarioBuscado.empresa != null)
-            {
-                return Ok(_loginRepository.CreateToken(usuarioBuscado.empresa.Email, usuarioBuscado.empresa.IdEmpresa.ToString() ,usuarioBuscado.empresa.IdTipoUsuario.ToString()));
-            } else
-            {
-                return BadRequest(new { error = true, message = "ocorreu um erro" });
-            }
-
+        [HttpPost("empresa")]
+        public IActionResult LoginEmpresa(LoginViewModel data)
+        {
+            TypeMessage loginEmpresa = _loginRepository.BuscarEmpresa(data);
+            if (loginEmpresa.ok) return Ok(loginEmpresa);
+            else return BadRequest(loginEmpresa);
         }
     }
 }
