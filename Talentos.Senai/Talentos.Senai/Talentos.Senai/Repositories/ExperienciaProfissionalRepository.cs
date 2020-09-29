@@ -16,9 +16,13 @@ namespace Talentos.Senai.Repositories
             private IAluno _alunoRepository = new AlunoRepository();
             private readonly string table = "experienciaProfissional";
 
-            public List<ExperienciaProfissional> Listar() => ctx.ExperienciaProfissional.Include(f => f.IdAlunoNavigation).ToList();
+            public List<ExperienciaProfissional> Listar() => ctx.ExperienciaProfissional
+                .Include(f => f.IdAlunoNavigation)
+            .ToList();
 
-            public ExperienciaProfissional BuscarPorId(int id) => ctx.ExperienciaProfissional.Include(e => e.IdAluno).FirstOrDefault(e => e.IdExperienciaProfissional == id);
+            public ExperienciaProfissional BuscarPorId(int id) => ctx.ExperienciaProfissional
+                .Include(e => e.IdAluno)
+                .FirstOrDefault(e => e.IdExperienciaProfissional == id);
 
             public TypeMessage Cadastrar(ExperienciaProfissional data)
             {

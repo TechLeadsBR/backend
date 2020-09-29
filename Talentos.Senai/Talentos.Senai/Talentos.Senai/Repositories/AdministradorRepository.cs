@@ -16,7 +16,9 @@ namespace Talentos.Senai.Repositories
         private ITipoUsuario _tipoUsuarioRepository = new TipoUsuarioRepository();
         private readonly string table = "administrador";
 
-        public List<Administrador> Listar() => ctx.Administrador.Include(a => a.IdTipoUsuarioNavigation).ToList();
+        public List<Administrador> Listar() => ctx.Administrador
+            .Include(a => a.IdTipoUsuarioNavigation)
+            .ToList();
 
         public Administrador BuscarPorId(int id) => ctx.Administrador.FirstOrDefault(a => a.IdAdministrador == id);
 

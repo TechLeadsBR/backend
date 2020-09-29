@@ -16,7 +16,9 @@ namespace Talentos.Senai.Repositories
         private readonly IEmpresa _empresaRepository = new EmpresaRepository();
         private readonly string table = "vagaemprego";
 
-        public List<VagaEmprego> Listar() => ctx.VagaEmprego.Include(v => v.IdEmpresaNavigation).ToList();
+        public List<VagaEmprego> Listar() => ctx.VagaEmprego
+            .Include(v => v.IdEmpresaNavigation)
+            .ToList();
 
         public VagaEmprego BuscarPorId(int id) => ctx.VagaEmprego.FirstOrDefault(v => v.IdVagaEmprego == id);
 
