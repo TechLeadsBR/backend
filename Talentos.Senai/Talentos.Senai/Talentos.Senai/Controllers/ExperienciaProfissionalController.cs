@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
@@ -17,18 +18,25 @@ namespace Talentos.Senai.Controllers
     public class ExperienciaProfissionalController : ControllerBase
     {
         private IExperienciaProfissional _experienciaProfissionalRepository;
+        private Functions _functions;
 
         public ExperienciaProfissionalController()
         {
             _experienciaProfissionalRepository = new ExperienciaProfissionalRepository();
+            _functions = new Functions();
         }
 
         /// <summary>
         /// Lista todas Experiencias Profissional
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = "1, 2, 3")]
         [HttpGet]
-        public IActionResult Get() => Ok(_experienciaProfissionalRepository.Listar());
+        public IActionResult Get()
+        {
+            string token = HttpContext.Request.Headers["Authorization"][0].Split(" ")[1];
+            int jti = _functions.GetJtiInBearerToken(token);
+            return Ok(_experienciaProfissionalRepository.Listar(jti));
+        }
 
         /// <summary>
         /// Cadastra uma Experiencia Profissional

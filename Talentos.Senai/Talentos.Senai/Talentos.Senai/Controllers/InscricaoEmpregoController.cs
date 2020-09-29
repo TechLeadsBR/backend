@@ -73,18 +73,5 @@ namespace Talentos.Senai.Controllers
             if (returnRepository.ok) return Ok(returnRepository);
             else return BadRequest(returnRepository);
         }
-
-        [Authorize(Roles = "3")]
-        [HttpGet("aluno")]
-        public object GetInscricaoAluno()
-        {
-            
-            var stream = HttpContext.Request.Headers["Authorization"][0].Split(" ")[1];
-            var handler = new JwtSecurityTokenHandler();
-            var jsontoken = handler.ReadToken(stream);
-            var tokenS = handler.ReadToken(stream) as JwtSecurityToken;
-            var jti = tokenS.Claims.First(claim => claim.Type == "jti").Value;
-            return jti;
-        }
     }
 }

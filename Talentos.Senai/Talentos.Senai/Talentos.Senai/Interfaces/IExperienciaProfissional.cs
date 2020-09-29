@@ -8,7 +8,7 @@ namespace Talentos.Senai.Interfaces
 {
     interface IExperienciaProfissional
     {
-        List<ExperienciaProfissional> Listar();
+        List<ExperienciaProfissional> Listar(int jti);
 
         ExperienciaProfissional BuscarPorId(int id);
 
