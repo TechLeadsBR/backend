@@ -18,11 +18,32 @@ namespace Talentos.Senai.Repositories
         private readonly string table = "aluno";
 
         public List<Aluno> Listar() => ctx.Aluno
+            .Select(a => new Aluno
+            {
+                IdAluno = a.IdAluno,
+                Nome = a.Nome,
+                Email = a.Email,
+                Cpf = a.Cpf,
+                Rg = a.Rg,
+                Telefone = a.Telefone,
+                IdEnderecoNavigation = a.IdEnderecoNavigation
+            })
             .Include(a => a.IdEnderecoNavigation)
             .Include(a => a.IdTipoUsuarioNavigation)
             .ToList();
 
-        public Aluno BuscarPorId(int id) => ctx.Aluno.FirstOrDefault(a => a.IdAluno == id);
+        public Aluno BuscarPorId(int id) => ctx.Aluno
+            .Select(a => new Aluno
+            {
+                IdAluno = a.IdAluno,
+                Nome = a.Nome,
+                Email = a.Email,
+                Cpf = a.Cpf,
+                Rg = a.Rg,
+                Telefone = a.Telefone,
+                IdEnderecoNavigation = a.IdEnderecoNavigation
+            })
+            .FirstOrDefault(a => a.IdAluno == id);
 
         public TypeMessage Cadastrar(Aluno data)
         {
