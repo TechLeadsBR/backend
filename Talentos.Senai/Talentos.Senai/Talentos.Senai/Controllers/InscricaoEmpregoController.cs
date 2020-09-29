@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
@@ -17,17 +19,25 @@ namespace Talentos.Senai.Controllers
     public class InscricaoEmpregoController : ControllerBase
     {
         private IInscricaoEmprego _inscricaoEmpregoRepository;
+        private Functions _functions;
 
         public InscricaoEmpregoController()
         {
             _inscricaoEmpregoRepository = new InscricaoEmpregoRepository();
+            _functions = new Functions();
         }
 
         /// <summary>
         /// Lista todas Inscrições de Empregos
         /// </summary>
+        [Authorize(Roles = "1,2,3")]
         [HttpGet]
-        public IActionResult Get() => Ok(_inscricaoEmpregoRepository.Listar());
+        public IActionResult Get()
+        {
+            string token = HttpContext.Request.Headers["Authorization"][0].Split(" ")[1];
+            int jti = _functions.GetJtiInBearerToken(token);
+            return Ok(_inscricaoEmpregoRepository.Listar(jti));
+        }
 
         /// <summary>
         /// Cadastra uma Inscricao de Emprego
@@ -62,6 +72,19 @@ namespace Talentos.Senai.Controllers
             TypeMessage returnRepository = _inscricaoEmpregoRepository.Deletar(id);
             if (returnRepository.ok) return Ok(returnRepository);
             else return BadRequest(returnRepository);
+        }
+
+        [Authorize(Roles = "3")]
+        [HttpGet("aluno")]
+        public object GetInscricaoAluno()
+        {
+            
+            var stream = HttpContext.Request.Headers["Authorization"][0].Split(" ")[1];
+            var handler = new JwtSecurityTokenHandler();
+            var jsontoken = handler.ReadToken(stream);
+            var tokenS = handler.ReadToken(stream) as JwtSecurityToken;
+            var jti = tokenS.Claims.First(claim => claim.Type == "jti").Value;
+            return jti;
         }
     }
 }

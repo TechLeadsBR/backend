@@ -16,7 +16,9 @@ namespace Talentos.Senai.Repositories
         private IAluno _alunoRepository = new AlunoRepository();
         private readonly string table = "formacaoAcademica";
   
-        public List<FormacaoAcademica> Listar() => ctx.FormacaoAcademica.Include(f => f.IdAlunoNavigation).ToList();
+        public List<FormacaoAcademica> Listar() => ctx.FormacaoAcademica
+            .Include(f => f.IdAlunoNavigation)
+            .ToList();
 
         public FormacaoAcademica BuscarPorId(int id) => ctx.FormacaoAcademica.FirstOrDefault(f => f.IdFormacaoAcademica == id);
 

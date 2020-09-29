@@ -17,8 +17,13 @@ namespace Talentos.Senai.Repositories
         private readonly IAluno _alunoRepository = new AlunoRepository();
         private readonly IVagaEmprego _vagaEmpregoRepository = new VagaEmpregoRepository();
 
-        public List<InscricaoEmprego> Listar() => ctx.InscricaoEmprego.Include(e => e.IdAlunoNavigation).Include(e => e.IdVagaEmpregoNavigation).ToList();
-        public InscricaoEmprego BuscarporIdAlunoeVagaEmprego(int idAluno, int idVagaEmprego) => ctx.InscricaoEmprego.FirstOrDefault(e => e.IdAluno == idAluno && e.IdVagaEmprego == idVagaEmprego);
+        public List<InscricaoEmprego> Listar(int jti) => ctx.InscricaoEmprego
+            .Include(e => e.IdAlunoNavigation)
+            .Include(e => e.IdVagaEmpregoNavigation)
+            .Where(a => a.IdAluno == jti || a.IdVagaEmpregoNavigation.IdEmpresa == jti).ToList();
+
+        public InscricaoEmprego BuscarporIdAlunoeVagaEmprego(int idAluno, int idVagaEmprego) => ctx.InscricaoEmprego
+            .FirstOrDefault(e => e.IdAluno == idAluno && e.IdVagaEmprego == idVagaEmprego);
         public InscricaoEmprego BuscarporIdInscricao(int id) => ctx.InscricaoEmprego.FirstOrDefault(e => e.IdInscricaoEmprego == id);
 
         public TypeMessage Cadastrar(InscricaoEmprego data)

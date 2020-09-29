@@ -16,7 +16,9 @@ namespace Talentos.Senai.Repositories
         private readonly string table = "idioma";
         private readonly AlunoRepository _alunoRepository = new AlunoRepository();
 
-        public List<Idioma> Listar() => ctx.Idioma.Include(i => i.IdAlunoNavigation).ToList();
+        public List<Idioma> Listar() => ctx.Idioma
+            .Include(i => i.IdAlunoNavigation)
+            .ToList();
 
         public Idioma BuscarPorId(int id) => ctx.Idioma.FirstOrDefault(i => i.IdIdioma == id);
 

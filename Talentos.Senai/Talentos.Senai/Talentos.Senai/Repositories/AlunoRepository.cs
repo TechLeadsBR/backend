@@ -17,7 +17,10 @@ namespace Talentos.Senai.Repositories
         private IEndereco _enderecoRepository = new EnderecoRepository();
         private readonly string table = "aluno";
 
-        public List<Aluno> Listar() => ctx.Aluno.Include(a => a.IdEnderecoNavigation).Include(a => a.IdTipoUsuarioNavigation).ToList();
+        public List<Aluno> Listar() => ctx.Aluno
+            .Include(a => a.IdEnderecoNavigation)
+            .Include(a => a.IdTipoUsuarioNavigation)
+            .ToList();
 
         public Aluno BuscarPorId(int id) => ctx.Aluno.FirstOrDefault(a => a.IdAluno == id);
 

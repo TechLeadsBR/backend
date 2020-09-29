@@ -17,7 +17,10 @@ namespace Talentos.Senai.Repositories
         private IAluno _alunoRepository = new AlunoRepository();
         private readonly string table = "estagio";
 
-        public List<Estagio> Listar() => ctx.Estagio.Include(e => e.IdAlunoNavigation).Include(e => e.IdEmpresaNavigation).ToList();
+        public List<Estagio> Listar() => ctx.Estagio
+            .Include(e => e.IdAlunoNavigation)
+            .Include(e => e.IdEmpresaNavigation)
+            .ToList();
 
         public Estagio BuscarPorIdAluno(int id) => ctx.Estagio.FirstOrDefault(e => e.IdAluno == id);
 

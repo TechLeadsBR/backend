@@ -17,7 +17,9 @@ namespace Talentos.Senai.Repositories
         private readonly string table = "empresa";
         
         public Empresa BuscarPorId(int id) => ctx.Empresa.FirstOrDefault(e => e.IdEmpresa == id);
-        public List<Empresa> Listar() => ctx.Empresa.Include(e => e.IdTipoUsuarioNavigation).ToList();
+        public List<Empresa> Listar() => ctx.Empresa
+            .Include(e => e.IdTipoUsuarioNavigation)
+            .ToList();
 
         public TypeMessage Atualizar(int id, Empresa empresaAtualizado)
         {

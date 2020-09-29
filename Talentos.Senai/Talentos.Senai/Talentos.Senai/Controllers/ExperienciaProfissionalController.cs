@@ -21,7 +21,6 @@ namespace Talentos.Senai.Controllers
         public ExperienciaProfissionalController()
         {
             _experienciaProfissionalRepository = new ExperienciaProfissionalRepository();
-
         }
 
         /// <summary>
