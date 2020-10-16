@@ -9,97 +9,130 @@ namespace Talentos.Senai.Repositories
 {
     public class TipoUsuarioRepository : ITipoUsuario
     {
-        private TalentosContext ctx = new TalentosContext();
-        public readonly Functions _functions = new Functions();
-        private readonly string table = "tipousuario";
+        public readonly Functions _functions;
+        private readonly string table;
+        public TipoUsuarioRepository()
+        {
+            _functions = new Functions();
+            table = "tipousuario";
+        }
 
-        public List<TipoUsuario> Listar() => ctx.TipoUsuario.ToList();
-        public TipoUsuario BuscarPorNome(string titulo) => ctx.TipoUsuario.FirstOrDefault(t => t.TituloTipoUsuario == titulo);
+        public List<TipoUsuario> Listar()
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.TipoUsuario.ToList();
+            }
+        }
+        public TipoUsuario BuscarPorNome(string titulo)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.TipoUsuario.FirstOrDefault(t => t.TituloTipoUsuario == titulo);
+            }
+        }
 
-        public TipoUsuario BuscarPorId(int id) => ctx.TipoUsuario.FirstOrDefault(t => t.IdTipoUsuario == id);
+        public TipoUsuario BuscarPorId(int id)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.TipoUsuario.FirstOrDefault(t => t.IdTipoUsuario == id);
+            }
+        }
 
         public TypeMessage Cadastrar(TipoUsuario data)
         {
-            TipoUsuario tipoUsuarioBuscado = BuscarPorNome(data.TituloTipoUsuario);
-
-            if(tipoUsuarioBuscado == null)
-            {     
-                try
-                {
-                    ctx.TipoUsuario.Add(data);
-                    ctx.SaveChanges();
-
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                } catch(Exception error)
-                {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
-                }
-            }
-            else
+            using (TalentosContext ctx = new TalentosContext())
             {
-                string existsMesssage = _functions.defaultMessage(table, "exists");
+                TipoUsuario tipoUsuarioBuscado = BuscarPorNome(data.TituloTipoUsuario);
 
-                return _functions.replyObject(existsMesssage, false);
+                if (tipoUsuarioBuscado == null)
+                {
+                    try
+                    {
+                        ctx.TipoUsuario.Add(data);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                }
+                else
+                {
+                    string existsMesssage = _functions.defaultMessage(table, "exists");
+
+                    return _functions.replyObject(existsMesssage, false);
+                }
             }
         }
 
         public TypeMessage Atualizar(TipoUsuario tituloNovo, int id)
         {
-            TipoUsuario tipoUsuarioBuscado = BuscarPorId(id);
-
-            if(tipoUsuarioBuscado != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                try
-                {
-                    tipoUsuarioBuscado.TituloTipoUsuario = tituloNovo.TituloTipoUsuario;
-                    ctx.TipoUsuario.Update(tipoUsuarioBuscado);
-                    ctx.SaveChanges();
+                TipoUsuario tipoUsuarioBuscado = BuscarPorId(id);
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                }catch(Exception error)
+                if (tipoUsuarioBuscado != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        tipoUsuarioBuscado.TituloTipoUsuario = tituloNovo.TituloTipoUsuario;
+                        ctx.TipoUsuario.Update(tipoUsuarioBuscado);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                }
+                else
+                {
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
                 }
             }
-            else
-            {
-                string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                return _functions.replyObject(notFoundMessage, false);
-            }
-
         }
 
         public TypeMessage Deletar(int id)
         {
-            TipoUsuario tipoUsuarioBuscado = BuscarPorId(id);
-
-            if(tipoUsuarioBuscado != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                try
-                {
-                    ctx.TipoUsuario.Remove(tipoUsuarioBuscado);
-                    ctx.SaveChanges();
+                TipoUsuario tipoUsuarioBuscado = BuscarPorId(id);
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                } catch(Exception error)
+                if (tipoUsuarioBuscado != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        ctx.TipoUsuario.Remove(tipoUsuarioBuscado);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
+                }
+                else
+                {
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
                 }
             }
-            else
-            {
-                string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                return _functions.replyObject(notFoundMessage, false);
-            }
-        }        
+        }
     }
 }

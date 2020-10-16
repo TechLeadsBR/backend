@@ -11,82 +11,156 @@ namespace Talentos.Senai.Repositories
 {
     public class InscricaoEmpregoRepository : IInscricaoEmprego
     {
-        private TalentosContext ctx = new TalentosContext();
-        private readonly Functions _functions = new Functions();
-        private readonly string table = "inscricaoemprego";
-        private readonly IAluno _alunoRepository = new AlunoRepository();
-        private readonly IVagaEmprego _vagaEmpregoRepository = new VagaEmpregoRepository();
+        private readonly Functions _functions;
+        private readonly IAluno _alunoRepository;
+        private readonly IVagaEmprego _vagaEmpregoRepository;
+        private readonly string table;
 
-        public List<InscricaoEmprego> Listar(int jti) => ctx.InscricaoEmprego
-            .Include(e => e.IdAlunoNavigation)
-            .Include(e => e.IdVagaEmpregoNavigation)
-            .Where(a => a.IdAluno == jti || a.IdVagaEmpregoNavigation.IdEmpresa == jti).ToList();
+        public InscricaoEmpregoRepository()
+        {
+            _functions = new Functions();
+            _alunoRepository = new AlunoRepository();
+            _vagaEmpregoRepository = new VagaEmpregoRepository();
+            table = "inscricaoemprego";
 
-        public InscricaoEmprego BuscarporIdAlunoeVagaEmprego(int idAluno, int idVagaEmprego) => ctx.InscricaoEmprego
-            .FirstOrDefault(e => e.IdAluno == idAluno && e.IdVagaEmprego == idVagaEmprego);
-        public InscricaoEmprego BuscarporIdInscricao(int id) => ctx.InscricaoEmprego.FirstOrDefault(e => e.IdInscricaoEmprego == id);
+        }
+
+        public List<InscricaoEmprego> Listar(int jti)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.InscricaoEmprego
+                    .Include(e => e.IdAlunoNavigation)
+                    .Include(e => e.IdVagaEmpregoNavigation)
+                    .Where(a => a.IdAluno == jti || a.IdVagaEmpregoNavigation.IdEmpresa == jti).ToList();
+            }
+        }
+
+        public InscricaoEmprego BuscarporIdAlunoeVagaEmprego(int idAluno, int idVagaEmprego)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.InscricaoEmprego
+                    .FirstOrDefault(e => e.IdAluno == idAluno && e.IdVagaEmprego == idVagaEmprego);
+            }
+        }
+        public InscricaoEmprego BuscarporIdInscricao(int id)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.InscricaoEmprego.FirstOrDefault(e => e.IdInscricaoEmprego == id);
+            }
+        }
 
         public TypeMessage Cadastrar(InscricaoEmprego data)
         {
-            InscricaoEmprego inscricaoProcurada = BuscarporIdAlunoeVagaEmprego(
-                data.IdAluno.GetValueOrDefault(), 
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                InscricaoEmprego inscricaoProcurada = BuscarporIdAlunoeVagaEmprego(
+                data.IdAluno.GetValueOrDefault(),
                 data.IdVagaEmprego.GetValueOrDefault());
 
 
-            if (inscricaoProcurada == null)
-            {
-                VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
-                Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+                if (inscricaoProcurada == null)
+                {
+                    VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
+                    Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
 
-                if(vagaBuscada != null && alunoBuscado != null)
-                {
-                    try
+                    if (vagaBuscada != null && alunoBuscado != null)
                     {
-                        ctx.InscricaoEmprego.Add(data);
-                        ctx.SaveChanges();
-                        string okMessage = _functions.defaultMessage(table, "ok");
-                        return _functions.replyObject(okMessage, true);
+                        try
+                        {
+                            ctx.InscricaoEmprego.Add(data);
+                            ctx.SaveChanges();
+                            string okMessage = _functions.defaultMessage(table, "ok");
+                            return _functions.replyObject(okMessage, true);
+                        }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine(error);
+                            string errorMessage = _functions.defaultMessage(table, "error");
+                            return _functions.replyObject(errorMessage, false);
+                        }
                     }
-                    catch (Exception error)
+                    else
                     {
-                        Console.WriteLine(error);
-                        string errorMessage = _functions.defaultMessage(table, "error");
-                        return _functions.replyObject(errorMessage, false);
+                        string dataMessage = _functions.defaultMessage(table, "data");
+                        return _functions.replyObject(dataMessage, false);
                     }
-                } else
-                {
-                    string dataMessage = _functions.defaultMessage(table, "data");
-                    return _functions.replyObject(dataMessage, false);
+
                 }
-
-            } else {
-                string existsMessage = _functions.defaultMessage(table, "exists");
-                return _functions.replyObject(existsMessage, false);
+                else
+                {
+                    string existsMessage = _functions.defaultMessage(table, "exists");
+                    return _functions.replyObject(existsMessage, false);
+                }
             }
         }
 
 
         public TypeMessage Atualizar(int id, InscricaoEmprego data)
         {
-            InscricaoEmprego inscricaoBuscada = BuscarporIdInscricao(id);
-
-            if (inscricaoBuscada != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                InscricaoEmprego inscricaoExistente = BuscarporIdAlunoeVagaEmprego(
-                    data.IdAluno.GetValueOrDefault(), data.IdVagaEmprego.GetValueOrDefault());
-                Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
-                VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
+                InscricaoEmprego inscricaoBuscada = BuscarporIdInscricao(id);
 
-                if(alunoBuscado != null && vagaBuscada != null && inscricaoExistente == null)
+                if (inscricaoBuscada != null)
+                {
+                    InscricaoEmprego inscricaoExistente = BuscarporIdAlunoeVagaEmprego(
+                        data.IdAluno.GetValueOrDefault(), data.IdVagaEmprego.GetValueOrDefault());
+                    Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+                    VagaEmprego vagaBuscada = _vagaEmpregoRepository.BuscarPorId(data.IdVagaEmprego.GetValueOrDefault());
+
+                    if (alunoBuscado != null && vagaBuscada != null && inscricaoExistente == null)
+                    {
+                        try
+                        {
+                            inscricaoBuscada.DataInscricao = data.DataInscricao != null ? data.DataInscricao : inscricaoBuscada.DataInscricao;
+                            inscricaoBuscada.IdAluno = data.IdAluno ?? inscricaoBuscada.IdAluno;
+                            inscricaoBuscada.IdVagaEmprego = data.IdVagaEmprego ?? inscricaoBuscada.IdVagaEmprego;
+
+
+                            ctx.InscricaoEmprego.Update(inscricaoBuscada);
+                            ctx.SaveChanges();
+
+                            string okMessage = _functions.defaultMessage(table, "ok");
+                            return _functions.replyObject(okMessage, true);
+
+                        }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine(error);
+                            string errorMessage = _functions.defaultMessage(table, "error");
+                            return _functions.replyObject(errorMessage, false);
+                        }
+                    }
+                    else
+                    {
+                        string dataMessage = _functions.defaultMessage(table, "data");
+                        return _functions.replyObject(dataMessage, false);
+                    }
+                }
+                else
+                {
+                    string dataMessage = _functions.defaultMessage(table, "data");
+                    return _functions.replyObject(dataMessage, false);
+                }
+            }
+        }
+
+
+
+        public TypeMessage Deletar(int id)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                InscricaoEmprego inscricaoBuscada = BuscarporIdInscricao(id);
+
+                if (inscricaoBuscada != null)
                 {
                     try
                     {
-                        inscricaoBuscada.DataInscricao = data.DataInscricao != null ? data.DataInscricao : inscricaoBuscada.DataInscricao;
-                        inscricaoBuscada.IdAluno = data.IdAluno ?? inscricaoBuscada.IdAluno;
-                        inscricaoBuscada.IdVagaEmprego = data.IdVagaEmprego ?? inscricaoBuscada.IdVagaEmprego;
-
-
-                        ctx.InscricaoEmprego.Update(inscricaoBuscada);
+                        ctx.InscricaoEmprego.Remove(inscricaoBuscada);
                         ctx.SaveChanges();
 
                         string okMessage = _functions.defaultMessage(table, "ok");
@@ -98,54 +172,14 @@ namespace Talentos.Senai.Repositories
                         Console.WriteLine(error);
                         string errorMessage = _functions.defaultMessage(table, "error");
                         return _functions.replyObject(errorMessage, false);
-                    } 
+                    }
                 }
                 else
                 {
-                    string dataMessage = _functions.defaultMessage(table, "data");
-                    return _functions.replyObject(dataMessage, false);
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
                 }
-            
-            }
-            else
-            {
-                string dataMessage = _functions.defaultMessage(table, "data");
-                return _functions.replyObject(dataMessage, false);
-            }
-
-        }
-
-        
-
-        public TypeMessage Deletar(int id)
-        {
-            InscricaoEmprego inscricaoBuscada = BuscarporIdInscricao(id);
-
-            if (inscricaoBuscada != null)
-            {
-                try
-                {
-                    ctx.InscricaoEmprego.Remove(inscricaoBuscada);
-                    ctx.SaveChanges();
-
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-
-                }
-                catch (Exception error)
-                {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
-                }
-            }
-            else
-            {
-                string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                return _functions.replyObject(notFoundMessage, false);
             }
         }
-
-
     }
 }
