@@ -11,20 +11,45 @@ namespace Talentos.Senai.Repositories
 {
     public class EstagioRepository : IEstagio
     {
-        private TalentosContext ctx = new TalentosContext();
-        private readonly Functions _functions = new Functions();
-        private IEmpresa _empresaRepository = new EmpresaRepository();
-        private IAluno _alunoRepository = new AlunoRepository();
-        private readonly string table = "estagio";
+        private readonly Functions _functions;
+        private IEmpresa _empresaRepository;
+        private IAluno _alunoRepository;
+        private readonly string table;
 
-        public List<Estagio> Listar() => ctx.Estagio
-            .Include(e => e.IdAlunoNavigation)
-            .Include(e => e.IdEmpresaNavigation)
-            .ToList();
+        public EstagioRepository()
+        {
+            _functions = new Functions();
+            _empresaRepository = new EmpresaRepository();
+            _alunoRepository = new AlunoRepository();
+            table = "estagio";
+        }
 
-        public Estagio BuscarPorIdAluno(int id) => ctx.Estagio.FirstOrDefault(e => e.IdAluno == id);
+        public List<Estagio> Listar()
+        {
+            using(TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.Estagio
+                    .Include(e => e.IdAlunoNavigation)
+                    .Include(e => e.IdEmpresaNavigation)
+                    .ToList();
+            }
+        }
 
-        public Estagio BuscarPorId(int id) => ctx.Estagio.FirstOrDefault(e => e.IdEstagio == id);
+        public Estagio BuscarPorIdAluno(int id)
+        {
+            using(TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.Estagio.FirstOrDefault(e => e.IdAluno == id);
+            }
+        }
+
+        public Estagio BuscarPorId(int id)
+        {
+            using(TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.Estagio.FirstOrDefault(e => e.IdEstagio == id);
+            }
+        }
 
         public TypeMessage Cadastrar(Estagio data)
         {

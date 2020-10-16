@@ -11,94 +11,126 @@ namespace Talentos.Senai.Repositories
     public class EnderecoRepository : IEndereco
     {
         private TalentosContext ctx = new TalentosContext();
-        private readonly Functions _functions = new Functions();
-        private readonly string table = "endereco";
+        private readonly Functions _functions;
+        private readonly string table;
 
-        public List<Endereco> Listar() => ctx.Endereco.ToList();
+        public EnderecoRepository()
+        {
+            _functions = new Functions();
+            table = "endereco";
+        }
 
-        public Endereco BuscarPorId(int id) => ctx.Endereco.FirstOrDefault(e => e.IdEndereco == id);
+        public List<Endereco> Listar()
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.Endereco.ToList();
+            }
+        }
+
+        public Endereco BuscarPorId(int id)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.Endereco.FirstOrDefault(e => e.IdEndereco == id);
+            }
+        }
 
         public TypeMessage AtualizarEndereco(int id, Endereco data)
         {
-            Endereco enderecoAtualizar = BuscarPorId(id);
-
-            if(enderecoAtualizar != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                try
-                {
-                    enderecoAtualizar.Cep = data.Cep ?? enderecoAtualizar.Cep;
-                    enderecoAtualizar.Logradouro = data.Logradouro ?? enderecoAtualizar.Logradouro;
-                    enderecoAtualizar.Bairro = data.Bairro ?? enderecoAtualizar.Bairro;
-                    enderecoAtualizar.Numero = data.Numero ?? enderecoAtualizar.Numero;
-                    enderecoAtualizar.Complemento = data.Complemento ?? enderecoAtualizar.Complemento;
-                    enderecoAtualizar.Localidade = data.Localidade ?? enderecoAtualizar.Localidade;
+                Endereco enderecoAtualizar = BuscarPorId(id);
 
-                    ctx.Endereco.Update(enderecoAtualizar);
-                    ctx.SaveChanges();
-
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                } catch(Exception error)
+                if (enderecoAtualizar != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        enderecoAtualizar.Cep = data.Cep ?? enderecoAtualizar.Cep;
+                        enderecoAtualizar.Logradouro = data.Logradouro ?? enderecoAtualizar.Logradouro;
+                        enderecoAtualizar.Bairro = data.Bairro ?? enderecoAtualizar.Bairro;
+                        enderecoAtualizar.Numero = data.Numero ?? enderecoAtualizar.Numero;
+                        enderecoAtualizar.Complemento = data.Complemento ?? enderecoAtualizar.Complemento;
+                        enderecoAtualizar.Localidade = data.Localidade ?? enderecoAtualizar.Localidade;
+
+                        ctx.Endereco.Update(enderecoAtualizar);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
                 }
-            } else
-            {
-                string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                return _functions.replyObject(notFoundMessage, false);
+                else
+                {
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
+                }
             }
         }
 
         public TypeMessage CadastrarEndereco(Endereco novoEndereco)
         {
-            if(novoEndereco != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                try
+                if (novoEndereco != null)
                 {
-                    ctx.Endereco.Add(novoEndereco);
-                    ctx.SaveChanges();
+                    try
+                    {
+                        ctx.Endereco.Add(novoEndereco);
+                        ctx.SaveChanges();
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                } catch(Exception error)
-                {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
                 }
-            } else
-            {
-                string dataMessage = _functions.defaultMessage(table, "data");
-                return _functions.replyObject(dataMessage, false);
+                else
+                {
+                    string dataMessage = _functions.defaultMessage(table, "data");
+                    return _functions.replyObject(dataMessage, false);
+                }
             }
         }
 
         public TypeMessage DeletarEndereco(int id)
         {
-            Endereco enderecoBuscado = BuscarPorId(id);
-
-            if(enderecoBuscado != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                try
-                {
-                    ctx.Endereco.Remove(enderecoBuscado);
-                    ctx.SaveChanges();
+                Endereco enderecoBuscado = BuscarPorId(id);
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-                } catch(Exception error)
+                if (enderecoBuscado != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        ctx.Endereco.Remove(enderecoBuscado);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
                 }
-            }
-            else
-            {
-                string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                return _functions.replyObject(notFoundMessage, false);
+                else
+                {
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
+                }
             }
         }
     }
