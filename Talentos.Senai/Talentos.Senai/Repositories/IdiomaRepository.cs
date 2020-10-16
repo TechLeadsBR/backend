@@ -11,115 +11,150 @@ namespace Talentos.Senai.Repositories
 {
     public class IdiomaRepository : IIdioma
     {
-        private TalentosContext ctx = new TalentosContext();
-        private readonly Functions _functions = new Functions();
-        private readonly string table = "idioma";
-        private readonly AlunoRepository _alunoRepository = new AlunoRepository();
+        private readonly Functions _functions;
+        private readonly AlunoRepository _alunoRepository;
+        private readonly string table;
 
-        public List<Idioma> Listar() => ctx.Idioma
-            .Include(i => i.IdAlunoNavigation)
-            .ToList();
+        public IdiomaRepository()
+        {
+            _functions = new Functions();
+            _alunoRepository = new AlunoRepository();
+            table = "idioma";
+        }
 
-        public Idioma BuscarPorId(int id) => ctx.Idioma.FirstOrDefault(i => i.IdIdioma == id);
+        public List<Idioma> Listar()
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.Idioma
+                    .Include(i => i.IdAlunoNavigation)
+                    .ToList();
+            }
+        }
+
+        public Idioma BuscarPorId(int id)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.Idioma.FirstOrDefault(i => i.IdIdioma == id);
+            }
+        }
 
         public TypeMessage Cadastrar(Idioma data)
         {
-
-            if(data.Idioma1 != null && data.Nivel != null && Convert.ToBoolean(data.IdAluno))
+            using (TalentosContext ctx = new TalentosContext())
             {
-                Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
-
-                if(alunoBuscado == null)
+                if (data.Idioma1 != null && data.Nivel != null && Convert.ToBoolean(data.IdAluno))
                 {
-                    string notFoundMessaege = _functions.defaultMessage(table, "notfound");
-                    return _functions.replyObject(notFoundMessaege, false);
-                }else
-                {
-                    try {
-                        ctx.Idioma.Add(data);
-                        ctx.SaveChanges();
+                    Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
 
-                        string okMessage = _functions.defaultMessage(table, "ok");
-                        return _functions.replyObject(okMessage, true);
-                    } catch(Exception error)
+                    if (alunoBuscado == null)
                     {
-                        Console.WriteLine(error);
-                        string errorMessage = _functions.defaultMessage(table, "error");
-                        return _functions.replyObject(errorMessage, false);
+                        string notFoundMessaege = _functions.defaultMessage(table, "notfound");
+                        return _functions.replyObject(notFoundMessaege, false);
                     }
-                }
+                    else
+                    {
+                        try
+                        {
+                            ctx.Idioma.Add(data);
+                            ctx.SaveChanges();
 
-            } else
-            {
-                string dataMessage = _functions.defaultMessage(table, "data");
-                return _functions.replyObject(dataMessage, false);
+                            string okMessage = _functions.defaultMessage(table, "ok");
+                            return _functions.replyObject(okMessage, true);
+                        }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine(error);
+                            string errorMessage = _functions.defaultMessage(table, "error");
+                            return _functions.replyObject(errorMessage, false);
+                        }
+                    }
+
+                }
+                else
+                {
+                    string dataMessage = _functions.defaultMessage(table, "data");
+                    return _functions.replyObject(dataMessage, false);
+                }
             }
         }
 
         public TypeMessage Atualizar(int id, Idioma data)
         {
-            Idioma idiomaBuscado = BuscarPorId(id);
-
-            if(idiomaBuscado != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+                Idioma idiomaBuscado = BuscarPorId(id);
 
-                if (alunoBuscado != null)
+                if (idiomaBuscado != null)
                 {
-                    try
+                    Aluno alunoBuscado = _alunoRepository.BuscarPorId(data.IdAluno.GetValueOrDefault());
+
+                    if (alunoBuscado != null)
                     {
-                        idiomaBuscado.Idioma1 = data.Idioma1 ?? idiomaBuscado.Idioma1;
-                        idiomaBuscado.Nivel = data.Nivel ?? idiomaBuscado.Nivel;
-                        idiomaBuscado.IdAluno = data.IdAluno ?? idiomaBuscado.IdAluno;
+                        try
+                        {
+                            idiomaBuscado.Idioma1 = data.Idioma1 ?? idiomaBuscado.Idioma1;
+                            idiomaBuscado.Nivel = data.Nivel ?? idiomaBuscado.Nivel;
+                            idiomaBuscado.IdAluno = data.IdAluno ?? idiomaBuscado.IdAluno;
 
-                        ctx.Idioma.Update(idiomaBuscado);
-                        ctx.SaveChanges();
+                            ctx.Idioma.Update(idiomaBuscado);
+                            ctx.SaveChanges();
 
-                        string okMessage = _functions.defaultMessage(table, "ok");
-                        return _functions.replyObject(okMessage, true);
+                            string okMessage = _functions.defaultMessage(table, "ok");
+                            return _functions.replyObject(okMessage, true);
 
-                    } catch(Exception error)
-                    {
-                        Console.WriteLine(error);
-                        string errorMessage = _functions.defaultMessage(table, "error");
-                        return _functions.replyObject(errorMessage, false);
+                        }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine(error);
+                            string errorMessage = _functions.defaultMessage(table, "error");
+                            return _functions.replyObject(errorMessage, false);
+                        }
                     }
-                } else
+                    else
+                    {
+                        string notFoundMessage = _functions.defaultMessage("aluno", "notfound");
+                        return _functions.replyObject(notFoundMessage, false);
+                    }
+                }
+                else
                 {
-                    string notFoundMessage = _functions.defaultMessage("aluno", "notfound");
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
                     return _functions.replyObject(notFoundMessage, false);
                 }
-            } else
-            {
-                string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                return _functions.replyObject(notFoundMessage, false);
             }
         }
 
         public TypeMessage Deletar(int id)
         {
-            Idioma idiomaBuscado = BuscarPorId(id);
-
-            if(idiomaBuscado != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                try
-                {
-                    ctx.Remove(idiomaBuscado);
-                    ctx.SaveChanges();
+                Idioma idiomaBuscado = BuscarPorId(id);
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-
-                } catch(Exception error)
+                if (idiomaBuscado != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        ctx.Remove(idiomaBuscado);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
                 }
-            } else
-            {
-                string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                return _functions.replyObject(notFoundMessage, false);
+                else
+                {
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
+                }
             }
         }
     }

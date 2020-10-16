@@ -10,7 +10,6 @@ namespace Talentos.Senai.Repositories
 {
     public class EnderecoRepository : IEndereco
     {
-        private TalentosContext ctx = new TalentosContext();
         private readonly Functions _functions;
         private readonly string table;
 
