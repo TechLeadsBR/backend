@@ -11,21 +11,41 @@ namespace Talentos.Senai.Repositories
 {
     public class ExperienciaProfissionalRepository : IExperienciaProfissional
     {
-            private TalentosContext ctx = new TalentosContext();
-            private readonly Functions _functions = new Functions();
-            private IAluno _alunoRepository = new AlunoRepository();
-            private readonly string table = "experienciaProfissional";
+        private readonly Functions _functions;
+        private IAluno _alunoRepository;
+        private readonly string table;
 
-            public List<ExperienciaProfissional> Listar(int jti) => ctx.ExperienciaProfissional
-                .Include(f => f.IdAlunoNavigation)
-                .Where(e => e.IdAluno == jti)
-                .ToList();
+        public ExperienciaProfissionalRepository()
+        {
+            _functions = new Functions();
+            _alunoRepository = new AlunoRepository();
+            table = "experienciaProfissional";
+        }
 
-            public ExperienciaProfissional BuscarPorId(int id) => ctx.ExperienciaProfissional
-                .Include(e => e.IdAluno)
-                .FirstOrDefault(e => e.IdExperienciaProfissional == id);
+        public List<ExperienciaProfissional> Listar(int jti)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.ExperienciaProfissional
+                    .Include(f => f.IdAlunoNavigation)
+                    .Where(e => e.IdAluno == jti)
+                    .ToList();
+            }
+        }
 
-            public TypeMessage Cadastrar(ExperienciaProfissional data)
+        public ExperienciaProfissional BuscarPorId(int id)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.ExperienciaProfissional
+                    .Include(e => e.IdAluno)
+                    .FirstOrDefault(e => e.IdExperienciaProfissional == id);
+            }
+        }
+
+        public TypeMessage Cadastrar(ExperienciaProfissional data)
+        {
+            using (TalentosContext ctx = new TalentosContext())
             {
                 if (data != null)
                 {
@@ -46,7 +66,8 @@ namespace Talentos.Senai.Repositories
                             string errorMessage = _functions.defaultMessage(table, "error");
                             return _functions.replyObject(errorMessage, false);
                         }
-                    } else
+                    }
+                    else
                     {
                         string notFoundMessage = _functions.defaultMessage("aluno", "notfound");
                         return _functions.replyObject(notFoundMessage, false);
@@ -58,8 +79,11 @@ namespace Talentos.Senai.Repositories
                     return _functions.replyObject(dataMessage, false);
                 }
             }
+        }
 
-            public TypeMessage Atualizar(int id, ExperienciaProfissional dataExperiencia)
+        public TypeMessage Atualizar(int id, ExperienciaProfissional dataExperiencia)
+        {
+            using (TalentosContext ctx = new TalentosContext())
             {
                 ExperienciaProfissional experienciaParaAtualizar = BuscarPorId(id);
 
@@ -67,11 +91,11 @@ namespace Talentos.Senai.Repositories
                 {
                     Aluno alunoBuscado = _alunoRepository.BuscarPorId(dataExperiencia.IdAluno.GetValueOrDefault());
 
-                    if(alunoBuscado != null)
+                    if (alunoBuscado != null)
                     {
                         try
                         {
-                            experienciaParaAtualizar.Empresa = dataExperiencia.Empresa ?? experienciaParaAtualizar. Empresa;
+                            experienciaParaAtualizar.Empresa = dataExperiencia.Empresa ?? experienciaParaAtualizar.Empresa;
                             experienciaParaAtualizar.Cargo = dataExperiencia.Cargo ?? experienciaParaAtualizar.Cargo;
                             experienciaParaAtualizar.Descricao = dataExperiencia.Descricao ?? experienciaParaAtualizar.Descricao;
                             experienciaParaAtualizar.DataInico = dataExperiencia.DataInico != null ? dataExperiencia.DataInico : experienciaParaAtualizar.DataInico;
@@ -90,13 +114,12 @@ namespace Talentos.Senai.Repositories
                             string errorMessage = _functions.defaultMessage(table, "error");
                             return _functions.replyObject(errorMessage, false);
                         }
-                    } else
+                    }
+                    else
                     {
                         string notFoundMessage = _functions.defaultMessage("aluno", "notfound");
                         return _functions.replyObject(notFoundMessage, false);
                     }
-
-
                 }
                 else
                 {
@@ -104,10 +127,13 @@ namespace Talentos.Senai.Repositories
                     return _functions.replyObject(notFoundMessage, false);
                 }
             }
+        }
 
-            public TypeMessage Deletar(int id)
+        public TypeMessage Deletar(int id)
+        {
+            using (TalentosContext ctx = new TalentosContext())
             {
-               ExperienciaProfissional experienciaParaDeletar = BuscarPorId(id);
+                ExperienciaProfissional experienciaParaDeletar = BuscarPorId(id);
 
                 if (experienciaParaDeletar != null)
                 {
@@ -132,5 +158,6 @@ namespace Talentos.Senai.Repositories
                     return _functions.replyObject(notFoundMessage, false);
                 }
             }
+        }
     }
 }

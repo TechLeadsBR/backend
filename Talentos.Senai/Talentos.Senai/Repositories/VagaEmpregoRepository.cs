@@ -11,125 +11,166 @@ namespace Talentos.Senai.Repositories
 {
     public class VagaEmpregoRepository : IVagaEmprego
     {
-        private TalentosContext ctx = new TalentosContext();
-        private readonly Functions _functions = new Functions();
-        private readonly IEmpresa _empresaRepository = new EmpresaRepository();
-        private readonly string table = "vagaemprego";
+        private readonly Functions _functions;
+        private readonly IEmpresa _empresaRepository;
+        private readonly string table;
 
-        public List<VagaEmprego> Listar() => ctx.VagaEmprego
-            .Include(v => v.IdEmpresaNavigation)
-            .ToList();
+        public VagaEmpregoRepository()
+        {
+            _functions = new Functions();
+            _empresaRepository = new EmpresaRepository();
+            table = "vagaemprego";
+        }
 
-        public VagaEmprego BuscarPorId(int id) => ctx.VagaEmprego.FirstOrDefault(v => v.IdVagaEmprego == id);
+        public List<VagaEmprego> Listar()
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.VagaEmprego
+                    .Include(v => v.IdEmpresaNavigation)
+                    .ToList();
+            }
+        }
 
-        public List<VagaEmprego> FiltroGeral(string palavra) => ctx.VagaEmprego.FromSql($"EXEC FiltroVagaDeEmprego {palavra}").ToList();
+        public VagaEmprego BuscarPorId(int id)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.VagaEmprego.FirstOrDefault(v => v.IdVagaEmprego == id);
+            }
+        }
+
+        public List<VagaEmprego> FiltroGeral(string palavra)
+        {
+            using (TalentosContext ctx = new TalentosContext())
+            {
+                return ctx.VagaEmprego.FromSql($"EXEC FiltroVagaDeEmprego {palavra}").ToList();
+            }
+        }
 
         public TypeMessage Cadastrar(VagaEmprego data)
         {
-            if (data != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                Empresa empresaBuscada = _empresaRepository.BuscarPorId(data.IdEmpresa.GetValueOrDefault());
-
-                if(empresaBuscada != null)
+                if (data != null)
                 {
-                    try
-                    {
-                        ctx.VagaEmprego.Add(data);
-                        ctx.SaveChanges();
+                    Empresa empresaBuscada = _empresaRepository.BuscarPorId(data.IdEmpresa.GetValueOrDefault());
 
-                        string okMessage = _functions.defaultMessage(table, "ok");
-                        return _functions.replyObject(okMessage, true);
-
-                    } catch(Exception error)
+                    if (empresaBuscada != null)
                     {
-                        Console.WriteLine(error);
-                        string errorMessage = _functions.defaultMessage(table, "error");
-                        return _functions.replyObject(errorMessage, false);
+                        try
+                        {
+                            ctx.VagaEmprego.Add(data);
+                            ctx.SaveChanges();
+
+                            string okMessage = _functions.defaultMessage(table, "ok");
+                            return _functions.replyObject(okMessage, true);
+
+                        }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine(error);
+                            string errorMessage = _functions.defaultMessage(table, "error");
+                            return _functions.replyObject(errorMessage, false);
+                        }
                     }
-                }else
-                {
-                    string notFoundMessage = _functions.defaultMessage("empresa", "notfound");
-                    return _functions.replyObject(notFoundMessage, false);
+                    else
+                    {
+                        string notFoundMessage = _functions.defaultMessage("empresa", "notfound");
+                        return _functions.replyObject(notFoundMessage, false);
+                    }
+
+
                 }
-
-
-            } else
-            {
-                string dataMessage = _functions.defaultMessage(table, "data");
-                return _functions.replyObject(dataMessage, false);
+                else
+                {
+                    string dataMessage = _functions.defaultMessage(table, "data");
+                    return _functions.replyObject(dataMessage, false);
+                }
             }
         }
 
         public TypeMessage Atualizar(int id, VagaEmprego data)
         {
-            VagaEmprego vagaBuscada = BuscarPorId(id);
-
-            if(vagaBuscada != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                Empresa empresaBuscada = _empresaRepository.BuscarPorId(data.IdEmpresa.GetValueOrDefault());
+                VagaEmprego vagaBuscada = BuscarPorId(id);
 
-                if(empresaBuscada != null)
+                if (vagaBuscada != null)
                 {
-                    try
+                    Empresa empresaBuscada = _empresaRepository.BuscarPorId(data.IdEmpresa.GetValueOrDefault());
+
+                    if (empresaBuscada != null)
                     {
-                        vagaBuscada.Titulo = data.Titulo ?? vagaBuscada.Titulo;
-                        vagaBuscada.Nivel = data.Nivel ?? vagaBuscada.Nivel;
-                        vagaBuscada.Cidade = data.Cidade ?? vagaBuscada.Cidade;
-                        vagaBuscada.DescricaoVaga = data.DescricaoVaga ?? vagaBuscada.DescricaoVaga;
-                        vagaBuscada.Habilidade = data.Habilidade ?? vagaBuscada.Habilidade;
-                        vagaBuscada.RemuneracaoBeneficio = data.RemuneracaoBeneficio ?? vagaBuscada.RemuneracaoBeneficio;
-                        vagaBuscada.TipoContrato = data.TipoContrato ?? vagaBuscada.TipoContrato;
-                        vagaBuscada.IdEmpresa = data.IdEmpresa ?? vagaBuscada.IdEmpresa;
+                        try
+                        {
+                            vagaBuscada.Titulo = data.Titulo ?? vagaBuscada.Titulo;
+                            vagaBuscada.Nivel = data.Nivel ?? vagaBuscada.Nivel;
+                            vagaBuscada.Cidade = data.Cidade ?? vagaBuscada.Cidade;
+                            vagaBuscada.DescricaoVaga = data.DescricaoVaga ?? vagaBuscada.DescricaoVaga;
+                            vagaBuscada.Habilidade = data.Habilidade ?? vagaBuscada.Habilidade;
+                            vagaBuscada.RemuneracaoBeneficio = data.RemuneracaoBeneficio ?? vagaBuscada.RemuneracaoBeneficio;
+                            vagaBuscada.TipoContrato = data.TipoContrato ?? vagaBuscada.TipoContrato;
+                            vagaBuscada.IdEmpresa = data.IdEmpresa ?? vagaBuscada.IdEmpresa;
 
-                        ctx.VagaEmprego.Update(vagaBuscada);
-                        ctx.SaveChanges();
+                            ctx.VagaEmprego.Update(vagaBuscada);
+                            ctx.SaveChanges();
 
-                        string okMessage = _functions.defaultMessage(table, "ok");
-                        return _functions.replyObject(okMessage, true);
+                            string okMessage = _functions.defaultMessage(table, "ok");
+                            return _functions.replyObject(okMessage, true);
 
-                    } catch(Exception error)
-                    {
-                        Console.WriteLine(error);
-                        string errorMessage = _functions.defaultMessage(table, "error");
-                        return _functions.replyObject(errorMessage, false);
+                        }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine(error);
+                            string errorMessage = _functions.defaultMessage(table, "error");
+                            return _functions.replyObject(errorMessage, false);
+                        }
                     }
-                } else
+                    else
+                    {
+                        string notFoundMessage = _functions.defaultMessage("empresa", "notfound");
+                        return _functions.replyObject(notFoundMessage, false);
+                    }
+
+                }
+                else
                 {
-                    string notFoundMessage = _functions.defaultMessage("empresa", "notfound");
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
                     return _functions.replyObject(notFoundMessage, false);
                 }
-
-            }else
-            {
-                string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                return _functions.replyObject(notFoundMessage, false);
             }
         }
 
         public TypeMessage Deletar(int id)
         {
-            VagaEmprego vagaBuscada = BuscarPorId(id);
-
-            if(vagaBuscada != null)
+            using (TalentosContext ctx = new TalentosContext())
             {
-                try
-                {
-                    ctx.VagaEmprego.Remove(vagaBuscada);
-                    ctx.SaveChanges();
+                VagaEmprego vagaBuscada = BuscarPorId(id);
 
-                    string okMessage = _functions.defaultMessage(table, "ok");
-                    return _functions.replyObject(okMessage, true);
-
-                } catch( Exception error)
+                if (vagaBuscada != null)
                 {
-                    Console.WriteLine(error);
-                    string errorMessage = _functions.defaultMessage(table, "error");
-                    return _functions.replyObject(errorMessage, false);
+                    try
+                    {
+                        ctx.VagaEmprego.Remove(vagaBuscada);
+                        ctx.SaveChanges();
+
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
+
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
+                    }
                 }
-            } else
-            {
-                string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                return _functions.replyObject(notFoundMessage, false);
+                else
+                {
+                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
+                    return _functions.replyObject(notFoundMessage, false);
+                }
             }
         }
     }
