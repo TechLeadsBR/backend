@@ -94,7 +94,7 @@ namespace Talentos.Senai.Repositories
                 issuer: "talentos.senai.api",
                 audience: "talentos.senai.api",
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: creds
             );
 

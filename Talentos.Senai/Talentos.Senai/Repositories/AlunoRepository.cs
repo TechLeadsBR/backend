@@ -37,7 +37,9 @@ namespace Talentos.Senai.Repositories
                         Cpf = a.Cpf,
                         Rg = a.Rg,
                         Telefone = a.Telefone,
-                        IdEnderecoNavigation = a.IdEnderecoNavigation
+                        IdEnderecoNavigation = a.IdEnderecoNavigation,
+                        Genero = a.Genero,
+                        DataNascimento = a.DataNascimento
                     })
                     .Include(a => a.IdEnderecoNavigation)
                     .Include(a => a.IdTipoUsuarioNavigation)
@@ -49,18 +51,7 @@ namespace Talentos.Senai.Repositories
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                return ctx.Aluno
-                    .Select(a => new Aluno
-                    {
-                        IdAluno = a.IdAluno,
-                        Nome = a.Nome,
-                        Email = a.Email,
-                        Cpf = a.Cpf,
-                        Rg = a.Rg,
-                        Telefone = a.Telefone,
-                        IdEnderecoNavigation = a.IdEnderecoNavigation
-                    })
-                    .FirstOrDefault(a => a.IdAluno == id);
+                return ctx.Aluno.FirstOrDefault(a => a.IdAluno == id);
             }
         }
 
@@ -115,60 +106,48 @@ namespace Talentos.Senai.Repositories
 
                 if (alunoParaAtualizar != null)
                 {
-                    TipoUsuario tipoUsuarioBuscado = _tipoUsuarioRepository.BuscarPorId(dataAluno.IdTipoUsuario.GetValueOrDefault());
-                    Endereco enderecoBuscado = _enderecoRepository.BuscarPorId(dataAluno.IdEndereco.GetValueOrDefault());
-
-                    if (tipoUsuarioBuscado != null && enderecoBuscado != null)
+                    try
                     {
-                        try
-                        {
-                            alunoParaAtualizar.Nome = dataAluno.Nome ?? alunoParaAtualizar.Nome;
-                            alunoParaAtualizar.Email = dataAluno.Email ?? alunoParaAtualizar.Email;
-                            alunoParaAtualizar.Senha = dataAluno.Senha ?? alunoParaAtualizar.Senha;
-                            alunoParaAtualizar.NomeSocial = dataAluno.NomeSocial ?? alunoParaAtualizar.NomeSocial;
-                            alunoParaAtualizar.Rg = dataAluno.Rg ?? alunoParaAtualizar.Rg;
-                            alunoParaAtualizar.Cpf = dataAluno.Cpf ?? alunoParaAtualizar.Cpf;
-                            alunoParaAtualizar.DataNascimento = dataAluno.DataNascimento != null ? dataAluno.DataNascimento : alunoParaAtualizar.DataNascimento;
-                            alunoParaAtualizar.Genero = dataAluno.Genero ?? alunoParaAtualizar.Genero;
-                            alunoParaAtualizar.CursoSenai = dataAluno.CursoSenai ?? alunoParaAtualizar.CursoSenai;
-                            alunoParaAtualizar.DataFormacao = dataAluno.DataFormacao != null ? dataAluno.DataFormacao : alunoParaAtualizar.DataFormacao;
-                            alunoParaAtualizar.Telefone = dataAluno.Telefone ?? alunoParaAtualizar.Telefone;
-                            alunoParaAtualizar.TipoDefiencia = dataAluno.TipoDefiencia ?? alunoParaAtualizar.TipoDefiencia;
-                            alunoParaAtualizar.DetalheDeficiencia = dataAluno.DetalheDeficiencia ?? alunoParaAtualizar.DetalheDeficiencia;
-                            alunoParaAtualizar.PreferenciaArea = dataAluno.PreferenciaArea ?? alunoParaAtualizar.PreferenciaArea;
-                            alunoParaAtualizar.Descricao = dataAluno.Descricao ?? alunoParaAtualizar.Descricao;
-                            alunoParaAtualizar.Linkedin = dataAluno.Linkedin ?? alunoParaAtualizar.Linkedin;
-                            alunoParaAtualizar.GitHub = dataAluno.GitHub ?? alunoParaAtualizar.GitHub;
-                            alunoParaAtualizar.NomeFoto = dataAluno.NomeFoto ?? alunoParaAtualizar.NomeFoto;
-                            alunoParaAtualizar.PerfilComportamental = dataAluno.PerfilComportamental ?? alunoParaAtualizar.PerfilComportamental;
-                            alunoParaAtualizar.IdTipoUsuario = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdTipoUsuario;
-                            alunoParaAtualizar.IdEndereco = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdEndereco;
+                        alunoParaAtualizar.Nome = dataAluno.Nome ?? alunoParaAtualizar.Nome;
+                        alunoParaAtualizar.Email = dataAluno.Email ?? alunoParaAtualizar.Email;
+                        alunoParaAtualizar.Senha = dataAluno.Senha ?? alunoParaAtualizar.Senha;
+                        alunoParaAtualizar.NomeSocial = dataAluno.NomeSocial ?? alunoParaAtualizar.NomeSocial;
+                        alunoParaAtualizar.Rg = dataAluno.Rg ?? alunoParaAtualizar.Rg;
+                        alunoParaAtualizar.Cpf = dataAluno.Cpf ?? alunoParaAtualizar.Cpf;
+                        alunoParaAtualizar.DataNascimento = dataAluno.DataNascimento != null ? dataAluno.DataNascimento : alunoParaAtualizar.DataNascimento;
+                        alunoParaAtualizar.Genero = dataAluno.Genero ?? alunoParaAtualizar.Genero;
+                        alunoParaAtualizar.CursoSenai = dataAluno.CursoSenai ?? alunoParaAtualizar.CursoSenai;
+                        alunoParaAtualizar.DataFormacao = dataAluno.DataFormacao != null ? dataAluno.DataFormacao : alunoParaAtualizar.DataFormacao;
+                        alunoParaAtualizar.Telefone = dataAluno.Telefone ?? alunoParaAtualizar.Telefone;
+                        alunoParaAtualizar.TipoDefiencia = dataAluno.TipoDefiencia ?? alunoParaAtualizar.TipoDefiencia;
+                        alunoParaAtualizar.DetalheDeficiencia = dataAluno.DetalheDeficiencia ?? alunoParaAtualizar.DetalheDeficiencia;
+                        alunoParaAtualizar.PreferenciaArea = dataAluno.PreferenciaArea ?? alunoParaAtualizar.PreferenciaArea;
+                        alunoParaAtualizar.Descricao = dataAluno.Descricao ?? alunoParaAtualizar.Descricao;
+                        alunoParaAtualizar.Linkedin = dataAluno.Linkedin ?? alunoParaAtualizar.Linkedin;
+                        alunoParaAtualizar.GitHub = dataAluno.GitHub ?? alunoParaAtualizar.GitHub;
+                        alunoParaAtualizar.NomeFoto = dataAluno.NomeFoto ?? alunoParaAtualizar.NomeFoto;
+                        alunoParaAtualizar.PerfilComportamental = dataAluno.PerfilComportamental ?? alunoParaAtualizar.PerfilComportamental;
+                        alunoParaAtualizar.IdTipoUsuario = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdTipoUsuario;
+                        alunoParaAtualizar.IdEndereco = dataAluno.IdTipoUsuario ?? alunoParaAtualizar.IdEndereco;
 
-                            ctx.Aluno.Update(alunoParaAtualizar);
-                            ctx.SaveChanges();
+                        ctx.Aluno.Update(alunoParaAtualizar);
+                        ctx.SaveChanges();
 
-                            string okMessage = _functions.defaultMessage(table, "ok");
-                            return _functions.replyObject(okMessage, true);
-                        }
-                        catch (Exception error)
-                        {
-                            Console.WriteLine(error);
-                            string errorMessage = _functions.defaultMessage(table, "error");
-                            return _functions.replyObject(errorMessage, false);
-                        }
-
+                        string okMessage = _functions.defaultMessage(table, "ok");
+                        return _functions.replyObject(okMessage, true);
                     }
-                    else
+                    catch (Exception error)
                     {
-                        string dataMessage = _functions.defaultMessage(table, "data");
-                        return _functions.replyObject(dataMessage, false);
+                        Console.WriteLine(error);
+                        string errorMessage = _functions.defaultMessage(table, "error");
+                        return _functions.replyObject(errorMessage, false);
                     }
 
                 }
                 else
                 {
-                    string notFoundMessage = _functions.defaultMessage(table, "notfound");
-                    return _functions.replyObject(notFoundMessage, false);
+                    string dataMessage = _functions.defaultMessage(table, "data");
+                    return _functions.replyObject(dataMessage, false);
                 }
             }
         }
