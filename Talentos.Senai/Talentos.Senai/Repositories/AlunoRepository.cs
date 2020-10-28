@@ -47,11 +47,27 @@ namespace Talentos.Senai.Repositories
             }
         }
 
-        public Aluno BuscarPorId(int id)
+        public Aluno BuscarPorId(int id, bool allData = true)
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                return ctx.Aluno.FirstOrDefault(a => a.IdAluno == id);
+                if(allData) return ctx.Aluno.FirstOrDefault(a => a.IdAluno == id);
+                else
+                {
+                    return ctx.Aluno.Select(a => new Aluno
+                    {
+                        IdAluno = a.IdAluno,
+                        Nome = a.Nome,
+                        Email = a.Email,
+                        Cpf = a.Cpf,
+                        Rg = a.Rg,
+                        Telefone = a.Telefone,
+                        IdEnderecoNavigation = a.IdEnderecoNavigation,
+                        Genero = a.Genero,
+                        DataNascimento = a.DataNascimento,
+                        PerfilComportamental = a.PerfilComportamental
+                    }).FirstOrDefault(a => a.IdAluno == id);
+                }
             }
         }
 

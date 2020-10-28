@@ -22,20 +22,46 @@ namespace Talentos.Senai.Repositories
             table = "empresa";
         }
 
-        public Empresa BuscarPorId(int id)
+        public Empresa BuscarPorId(int id, bool allData= true)
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                return ctx.Empresa.FirstOrDefault(e => e.IdEmpresa == id);
+                if (allData)
+                {
+                    return ctx.Empresa.FirstOrDefault(e => e.IdEmpresa == id);
+                }else
+                {
+                    return ctx.Empresa.Select(e => new Empresa
+                    {
+                        IdEmpresa = e.IdEmpresa,
+                        RazaoSocial = e.RazaoSocial,
+                        Email = e.Email,
+                        Cnpj = e.Cnpj,
+                        AtividadeEconomica = e.AtividadeEconomica,
+                        Telefone = e.Telefone,
+                        TelefoneDois = e.TelefoneDois,
+                        NomeFoto = e.NomeFoto,
+                        DescricaoEmpresa = e.DescricaoEmpresa
+                    }).FirstOrDefault(e => e.IdEmpresa == id);
+                }
             }
         }
         public List<Empresa> Listar()
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                return ctx.Empresa
-                    .Include(e => e.IdTipoUsuarioNavigation)
-                    .ToList();
+                return ctx.Empresa.Select(e => new Empresa
+                {
+                    IdEmpresa = e.IdEmpresa,
+                    RazaoSocial = e.RazaoSocial,
+                    Email = e.Email,
+                    Cnpj = e.Cnpj,
+                    AtividadeEconomica = e.AtividadeEconomica,
+                    Telefone = e.Telefone,
+                    TelefoneDois = e.TelefoneDois,
+                    NomeFoto = e.NomeFoto,
+                    DescricaoEmpresa = e.DescricaoEmpresa
+                }).ToList();
             }
         }
 

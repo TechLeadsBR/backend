@@ -18,20 +18,31 @@ namespace Talentos.Senai.Controllers
     public class EmpresaController : ControllerBase
     {
         private IEmpresa _empresaRepository;
+        private Functions _functions;
 
 
         public EmpresaController()
         {
             _empresaRepository = new EmpresaRepository();
+            _functions = new Functions();
         }
 
         /// <summary>
         /// Lista todas Empresas
         /// </summary>
         /// <returns>Retorna uma lista de Empresas</returns>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = "1")]
         [HttpGet]
         public IActionResult Get() => Ok(_empresaRepository.Listar());
+
+        [Authorize(Roles = "3")]
+        [HttpGet("id")]
+        public IActionResult GetById()
+        {
+            var token = Request.Headers["Authorization"][0].Split(' ')[1];
+            int jti = _functions.GetJtiInBearerToken(token);
+            return Ok(_empresaRepository.BuscarPorId(jti, false));
+        }
 
         /// <summary>
         /// Cadastra uma Empresa
@@ -66,7 +77,7 @@ namespace Talentos.Senai.Controllers
         /// <param name="id"></param>
         /// <param name="empresaAtualizado"></param>
         /// <returns></returns>
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "1, 3")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Empresa empresaAtualizado)
         {

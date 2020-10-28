@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
@@ -17,10 +18,12 @@ namespace Talentos.Senai.Controllers
     public class AlunoController : ControllerBase
     {
         private IAluno _alunoRepository;
+        private Functions _functions;
 
         public AlunoController()
         {
             _alunoRepository = new AlunoRepository();
+            _functions = new Functions();
         }
 
         /// <summary>
@@ -29,6 +32,15 @@ namespace Talentos.Senai.Controllers
         [Authorize(Roles = "1")]
         [HttpGet]
         public IActionResult Get() => Ok(_alunoRepository.Listar());
+
+        [Authorize(Roles = "2")]
+        [HttpGet("id")]
+        public IActionResult GetById()
+        {
+            var token = Request.Headers["Authorization"][0].Split(' ')[1];
+            int jti = _functions.GetJtiInBearerToken(token);
+            return Ok(_alunoRepository.BuscarPorId(jti, false));
+        }
 
         /// <summary>
         /// Cadastra um Aluno

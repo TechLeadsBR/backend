@@ -24,7 +24,7 @@ namespace Talentos.Senai.Interfaces
         /// <param name="novoEmpresa">Objeto novoEmpresa que será cadastrado</param>
         TypeMessage Cadastrar(Empresa novoEmpresa);
 
-        Empresa BuscarPorId(int id);
+        Empresa BuscarPorId(int id, bool allData= true);
 
         /// <summary>
         /// Atualiza uma Empresa existente
