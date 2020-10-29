@@ -34,8 +34,8 @@ namespace Talentos.Senai.Controllers
         public IActionResult Get()
         {
             string token = HttpContext.Request.Headers["Authorization"][0].Split(" ")[1];
-            int jti = _functions.GetJtiInBearerToken(token);
-            return Ok(_experienciaProfissionalRepository.Listar(jti));
+            string jti = _functions.GetClaimInBearerToken(token, "jti");
+            return Ok(_experienciaProfissionalRepository.Listar(Convert.ToInt32(jti)));
         }
 
         /// <summary>

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Talentos.Senai.Domains;
+﻿using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
 using Talentos.Senai.ViewModels;
