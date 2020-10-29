@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Talentos.Senai.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Talentos.Senai.Utilities;
+using Microsoft.AspNetCore.Http;
+using Talentos.Senai.Interfaces;
 
 namespace Talentos.Senai.Controllers
 {
@@ -14,55 +14,39 @@ namespace Talentos.Senai.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
-        private UploadImagesRepository _uploadImagesRepository;
+        private IUploadImages _uploadImagesRepository;
+        private Functions _functions;
 
-
-        public UploadController(HostingEnvironment hostingEnvironment)
+        public UploadController()
         {
             _uploadImagesRepository = new UploadImagesRepository();
+            _functions = new Functions();
         }
 
+        [Authorize(Roles = "1, 2, 3")]
         [HttpPost]
         public IActionResult UploadImage()
         {
-            // Save image
+            var token = Request.Headers["Authorization"][0].Split(" ")[1];
+            string jtiUser = _functions.GetClaimInBearerToken(token, "jti");
+            string roleUser = _functions.GetClaimInBearerToken(token, "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
+            string nameFolder = roleUser == "2" ? "StudentImages" : "CompanyImages";
 
-            try
+            IFormFile file = Request.Form.Files[0];
+            TypeMessage uploadRepository = _uploadImagesRepository.SaveImage(file, nameFolder);
+            if (uploadRepository.ok)
             {
-                var file = Request.Form.Files[0];
-                _uploadImagesRepository.Upload(file, "StudentImages");
-
-                return Ok("Deu bom");
+                string path = nameFolder + "/" + file.FileName.ToString();
+                TypeMessage saved = _uploadImagesRepository.SetPathNameImageUser(roleUser, Convert.ToInt32(jtiUser), path);
+                if (saved.ok)
+                {
+                    return StatusCode(201, uploadRepository);
+                } else
+                {
+                    return BadRequest(saved);
+                }
             }
-            catch (FileLoadException error)
-            {
-                Console.WriteLine("COMENTARIO DEU RUIM");
-                Console.WriteLine(error);
-                return BadRequest("Deu ruim");
-            }
-
-
-            //var files = HttpContext.Request.Form.Files;
-
-            //if (files.Count != 0)
-            //{
-            //    var ImagePath = @"Images\";
-            //    var Extension = Path.GetExtension(files[0].FileName);
-            //    var RelativeImagePath = ImagePath + files[0].FileName;
-            //    var AbsImagePath = Path.Combine("rootpah", RelativeImagePath);
-
-               
-
-            //    // upload
-            //    using (var filetream = new FileStream(RelativeImagePath, FileMode.Create))
-            //    {
-            //        files[0].CopyTo(filetream);
-            //    }
-
-            //    return Ok("Deu bom");
-            //}
-
-            //return BadRequest("Não deu bom");
+            else return BadRequest(uploadRepository);
         }
 
     }
