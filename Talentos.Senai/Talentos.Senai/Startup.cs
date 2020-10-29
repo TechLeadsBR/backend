@@ -75,7 +75,7 @@ namespace Talentos.Senai
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("talentos.key.autentication")),
-                        ClockSkew = TimeSpan.FromMinutes(30),
+                        ClockSkew = TimeSpan.FromMinutes(60),
                         ValidIssuer = "talentos.senai.api",
                         ValidAudience = "talentos.senai.api"
                     };
