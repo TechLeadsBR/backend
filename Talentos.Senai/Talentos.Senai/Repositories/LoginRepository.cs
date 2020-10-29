@@ -27,17 +27,25 @@ namespace Talentos.Senai.Repositories
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                Aluno alunoBuscado = ctx.Aluno.FirstOrDefault(a => a.Email == data.email && a.Senha == data.senha);
+                try
+                {
+                    Aluno alunoBuscado = ctx.Aluno.FirstOrDefault(a => a.Email == data.email && a.Senha == data.senha);
 
-                if (alunoBuscado != null)
+                    if (alunoBuscado != null)
+                    {
+                        var token = CreateToken(alunoBuscado.Email, alunoBuscado.IdAluno.ToString(), alunoBuscado.IdTipoUsuario.ToString());
+                        return _functions.replyObject(token.ToString(), true);
+                    }
+                    else
+                    {
+                        string okMessage = "E-mail ou senha inválidos";
+                        return _functions.replyObject(okMessage, false);
+                    }
+                } catch(Exception error)
                 {
-                    var token = CreateToken(alunoBuscado.Email, alunoBuscado.IdAluno.ToString(), alunoBuscado.IdTipoUsuario.ToString());
-                    return _functions.replyObject(token.ToString(), true);
-                }
-                else
-                {
-                    string message = "E-mail ou senha inválidos";
-                    return _functions.replyObject(message, false);
+                    Console.WriteLine(error);
+                    string errorMessage = "Erro no procedimento";
+                    return _functions.replyObject(errorMessage, false);
                 }
             }
         }

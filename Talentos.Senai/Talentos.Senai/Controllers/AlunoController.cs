@@ -38,8 +38,8 @@ namespace Talentos.Senai.Controllers
         public IActionResult GetById()
         {
             var token = Request.Headers["Authorization"][0].Split(' ')[1];
-            int jti = _functions.GetJtiInBearerToken(token);
-            return Ok(_alunoRepository.BuscarPorId(jti, false));
+            string jti = _functions.GetClaimInBearerToken(token, "jti");
+            return Ok(_alunoRepository.BuscarPorId(Convert.ToInt32(jti), false));
         }
 
         /// <summary>

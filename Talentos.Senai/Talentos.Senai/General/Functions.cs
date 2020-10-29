@@ -35,13 +35,13 @@ namespace Talentos.Senai.Utilities
             }
         }
 
-        public int GetJtiInBearerToken(string token)
+        public string GetClaimInBearerToken(string token, string typeClaim)
         {
             var handler = new JwtSecurityTokenHandler();
             var jsontoken = handler.ReadToken(token);
             var tokenS = handler.ReadToken(token) as JwtSecurityToken;
-            var jti = tokenS.Claims.First(claim => claim.Type == "jti").Value;
-            return Convert.ToInt32(jti);
+            var claim = tokenS.Claims.First(claims => claims.Type == typeClaim).Value;
+            return Convert.ToString(claim);
         }
     }
 }
