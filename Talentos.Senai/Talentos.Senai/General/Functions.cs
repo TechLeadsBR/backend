@@ -31,7 +31,7 @@ namespace Talentos.Senai.Utilities
             }
             else
             {
-                return $"parametro esperado: EXISTENTE ou OK ou ERROR ou NOTFOUND";
+                return $"parametro esperado: EXISTENTE ou OK ou ERROR ou NOTFOUND ou DATA";
             }
         }
 
