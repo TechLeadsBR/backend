@@ -65,7 +65,8 @@ namespace Talentos.Senai.Repositories
                         IdEnderecoNavigation = a.IdEnderecoNavigation,
                         Genero = a.Genero,
                         DataNascimento = a.DataNascimento,
-                        PerfilComportamental = a.PerfilComportamental
+                        PerfilComportamental = a.PerfilComportamental,
+                        NomeFoto = a.NomeFoto
                     }).FirstOrDefault(a => a.IdAluno == id);
                 }
             }
