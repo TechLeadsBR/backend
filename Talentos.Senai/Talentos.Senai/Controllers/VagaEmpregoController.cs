@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
@@ -17,10 +18,12 @@ namespace Talentos.Senai.Controllers
     public class VagaEmpregoController : ControllerBase
     {
         private IVagaEmprego _vagaEmpregoRepository;
+        private Functions _functions;
 
         public VagaEmpregoController()
         {
             _vagaEmpregoRepository = new VagaEmpregoRepository();
+            _functions = new Functions();
         }
 
         /// <summary>
@@ -39,6 +42,15 @@ namespace Talentos.Senai.Controllers
         //[Authorize(Roles = "1, 2, 3")]
         [HttpGet("{palavra}")]
         public IActionResult Get(string palavra) => Ok(_vagaEmpregoRepository.FiltroGeral(palavra));
+
+        [Authorize(Roles = "3")]
+        [HttpGet("empresa")]
+        public IActionResult GetByComparny()
+        {
+            var token = Request.Headers["Authorization"][0].Split(' ')[1];
+            string jti = _functions.GetClaimInBearerToken(token, "jti");
+            return Ok(_vagaEmpregoRepository.FiltrarPorEmpresa(Convert.ToInt32(jti)));
+        }
 
         /// <summary>
         /// Cadastra uma Vaga de Emprego

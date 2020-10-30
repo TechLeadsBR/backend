@@ -30,9 +30,9 @@ namespace Talentos.Senai.Repositories
             using (TalentosContext ctx = new TalentosContext())
             {
                 return ctx.InscricaoEmprego
-                    .Include(e => e.IdAlunoNavigation)
-                    .Include(e => e.IdVagaEmpregoNavigation)
-                    .Where(a => a.IdAluno == jti || a.IdVagaEmpregoNavigation.IdEmpresa == jti).ToList();
+                    .Include(a => a.IdVagaEmpregoNavigation.IdEmpresaNavigation)
+                    .Where(a => a.IdAluno == jti)
+                    .ToList();
             }
         }
 

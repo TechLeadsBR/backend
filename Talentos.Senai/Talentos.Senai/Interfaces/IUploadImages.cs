@@ -10,6 +10,6 @@ namespace Talentos.Senai.Interfaces
     {
         TypeMessage SetPathNameImageUser(string roleUser, int jtiUser, string pathname);
 
-        TypeMessage SaveImage(IFormFile file, string savingFolder)
+        TypeMessage SaveImage(IFormFile file, string savingFolder);
     }
 }
