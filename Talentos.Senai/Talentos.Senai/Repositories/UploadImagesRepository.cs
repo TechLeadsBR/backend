@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Utilities;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Repositories
 {
@@ -21,11 +22,11 @@ namespace Talentos.Senai.Repositories
             _empresaRepository = new EmpresaRepository();
         }
 
-        public TypeMessage SetPathNameImageUser(string roleUser, int jtiUser,string pathname)
-        { 
-            if(roleUser == "3")
+        public TypeMessage SetPathNameImageUser(string roleUser, int jtiUser, string pathname)
+        {
+            if (roleUser == Users.Company)
             {
-                using(TalentosContext ctx = new TalentosContext())
+                using (TalentosContext ctx = new TalentosContext())
                 {
                     try
                     {
@@ -47,9 +48,9 @@ namespace Talentos.Senai.Repositories
                     }
                 }
             }
-            if(roleUser == "2")
+            if (roleUser == Users.Student)
             {
-                using(TalentosContext ctx = new TalentosContext())
+                using (TalentosContext ctx = new TalentosContext())
                 {
                     try
                     {

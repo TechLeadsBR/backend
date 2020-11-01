@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
@@ -26,14 +28,14 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Lista todos os Idiomas
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Student)]
         [HttpGet]
         public IActionResult Get() => Ok(_idiomaRepository.Listar());
 
         /// <summary>
         /// Cadastra um Idioma
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Student)]
         [HttpPost]
         public IActionResult Post(Idioma data)
         {
@@ -45,7 +47,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Atualiza um Idioma
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Student)]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Idioma data)
         {
@@ -57,7 +59,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Deleta um Idioma
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Student)]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

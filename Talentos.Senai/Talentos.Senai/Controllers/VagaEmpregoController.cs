@@ -12,6 +12,7 @@ using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
@@ -30,7 +31,7 @@ namespace Talentos.Senai.Controllers
         /// Lista Todas Vagas de Emprego
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "1, 2, 3")]
+        [Authorize(Roles = Users.All)]
         [HttpGet]
         public IActionResult Get() => Ok(_vagaEmpregoRepository.Listar());
 
@@ -39,11 +40,11 @@ namespace Talentos.Senai.Controllers
         /// </summary>
         /// <param name="palavra"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "1, 2, 3")]
+        [Authorize(Roles = Users.All)]
         [HttpGet("{palavra}")]
         public IActionResult Get(string palavra) => Ok(_vagaEmpregoRepository.FiltroGeral(palavra));
 
-        [Authorize(Roles = "3")]
+        [Authorize(Roles = Users.Company)]
         [HttpGet("empresa")]
         public IActionResult GetByComparny()
         {
@@ -57,7 +58,7 @@ namespace Talentos.Senai.Controllers
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        [Authorize(Roles = "1, 3")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Company)]
         [HttpPost]
         public IActionResult Post(VagaEmprego data)
         {
@@ -72,7 +73,7 @@ namespace Talentos.Senai.Controllers
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        [Authorize(Roles = "1, 3")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Company)]
         [HttpPut("{id}")]
         public IActionResult Put(int id, VagaEmprego data)
         {
@@ -86,7 +87,7 @@ namespace Talentos.Senai.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "1, 3")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Company)]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

@@ -12,6 +12,7 @@ using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
@@ -29,7 +30,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Lista todas Experiencias Profissional
         /// </summary>
-        [Authorize(Roles = "1, 2, 3")]
+        [Authorize(Roles = Users.All)]
         [HttpGet]
         public IActionResult Get()
         {
@@ -41,7 +42,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Cadastra uma Experiencia Profissional
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = Users.Student)]
         [HttpPost]
         public IActionResult Post(ExperienciaProfissional data)
         {
@@ -53,7 +54,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Atualiza uma Experiencia Profissional
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Student)]
         [HttpPut("{id}")]
         public IActionResult Put(int id, ExperienciaProfissional data)
         {
@@ -65,7 +66,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Deleta uma Experiencia Profissional
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Student)]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

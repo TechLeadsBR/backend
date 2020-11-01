@@ -30,7 +30,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Lista todas Inscrições de Empregos
         /// </summary>
-        [Authorize(Roles = "1,2,3")]
+        [Authorize(Roles = Users.All)]
         [HttpGet]
         public IActionResult Get()
         {
@@ -42,6 +42,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Cadastra uma Inscricao de Emprego
         /// </summary>
+        [Authorize(Roles = Users.All)]
         [HttpPost]
         public IActionResult Post(InscricaoEmprego data)
         {
@@ -53,7 +54,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Atualiza uma Inscricao de Emprego
         /// </summary>
-        [Authorize(Roles = "3")]
+        [Authorize(Roles = Users.Company)]
         [HttpPut("{id}")]
         public IActionResult Put(int id, InscricaoEmprego data)
         {
@@ -65,7 +66,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Deleta uma Inscricao de Emprego
         /// </summary>
-        [Authorize(Roles = "3")]
+        [Authorize(Roles = Users.Administrator + "," + Users.Company)]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

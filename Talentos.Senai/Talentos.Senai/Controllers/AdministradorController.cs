@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
+    [Authorize(Roles = Users.Administrator)]
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
@@ -26,14 +23,12 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Lista todos os administradores
         /// </summary>
-        [Authorize(Roles = "1")]
         [HttpGet]
         public IActionResult Get() => Ok(_administradorRepository.Listar());
 
         /// <summary>
         /// Cadastra um administrador
         /// </summary>
-        [Authorize(Roles = "1")]
         [HttpPost]
         public IActionResult Post(Administrador data)
         {
@@ -45,7 +40,6 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Atualiza um administrador
         /// </summary>
-        [Authorize(Roles = "1")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Administrador data)
         {
@@ -57,7 +51,6 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Deleta um administrador
         /// </summary>
-        [Authorize(Roles = "1")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

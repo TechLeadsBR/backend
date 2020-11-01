@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
+    [Authorize(Roles = Users.Administrator)]
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
@@ -27,7 +29,6 @@ namespace Talentos.Senai.Controllers
         /// Lista todos os Estagios
         /// </summary>
         /// <returns>Retorna uma lista de estudios</returns>
-        [Authorize(Roles = "1")]
         [HttpGet]
         public IActionResult Get() => Ok(_estagioRepository.Listar());
 
@@ -35,7 +36,6 @@ namespace Talentos.Senai.Controllers
         /// Cadastra um Estagio
         /// </summary>
         /// <param name="data">Objeto novoEstudio que será cadastrado</param>
-        [Authorize(Roles = "1")]
         [HttpPost]
         public IActionResult Post(Estagio data)
         {
@@ -47,7 +47,6 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Atualiza um Estagio
         /// </summary>
-        [Authorize(Roles = "1")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Estagio data)
         {
@@ -59,7 +58,6 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Deleta um Estagio
         /// </summary>
-        [Authorize(Roles = "1")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

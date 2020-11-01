@@ -29,11 +29,11 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Listar todos Alunos
         /// </summary>
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = Users.Administrator)]
         [HttpGet]
         public IActionResult Get() => Ok(_alunoRepository.Listar());
 
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = Users.Student)]
         [HttpGet("id")]
         public IActionResult GetById()
         {
@@ -56,7 +56,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Atualiza um Aluno
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = Users.Administrator + ", " + Users.Student)]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno data)
         {
@@ -68,7 +68,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Deleta um Aluno
         /// </summary>
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = Users.Administrator + ", " + Users.Student)]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

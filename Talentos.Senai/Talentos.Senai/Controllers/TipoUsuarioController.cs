@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
+    [Authorize(Roles = Users.Administrator)]
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
@@ -27,7 +29,6 @@ namespace Talentos.Senai.Controllers
         /// Lista todos Tipos de usuario
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "1")]
         [HttpGet]
         public IActionResult Get() => Ok(_tipoUsuarioRepository.Listar());
 
@@ -36,7 +37,6 @@ namespace Talentos.Senai.Controllers
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        [Authorize(Roles = "1")]
         [HttpPost]
         public IActionResult Post(TipoUsuario data)
         {
@@ -51,7 +51,6 @@ namespace Talentos.Senai.Controllers
         /// <param name="data"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "1")]
         [HttpPut("{id}")]
         public IActionResult Put(TipoUsuario data, int id)
         {
@@ -65,7 +64,6 @@ namespace Talentos.Senai.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "1")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

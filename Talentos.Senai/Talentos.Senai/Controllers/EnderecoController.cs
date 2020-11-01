@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Repositories;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
@@ -26,14 +27,14 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Lista todos Endereços
         /// </summary>
-        [Authorize(Roles = "1, 2, 3, 4")]
+        [Authorize(Roles = Users.Administrator)]
         [HttpGet]
         public IActionResult Get() => Ok(_enderecoRepository.Listar());
 
         /// <summary>
         /// Lista Endereços Por Id
         /// </summary>
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = Users.Administrator)]
         [HttpGet("{id}")]
         public IActionResult GetById(int id) => Ok(_enderecoRepository.BuscarPorId(id));
 
@@ -51,6 +52,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Atualiza um Endereço
         /// </summary>
+        [Authorize(Roles = Users.Administrator)]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Endereco enderecoAtualizado)
         {
@@ -62,6 +64,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Deleta um Endereço
         /// </summary>
+        [Authorize(Roles = Users.Administrator)]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

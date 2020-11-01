@@ -44,7 +44,8 @@ namespace Talentos.Senai.Repositories
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                return ctx.VagaEmprego.Where(v => v.Titulo.Contains(palavra) || v.DescricaoVaga.Contains(palavra)).ToList();
+                return ctx.VagaEmprego.Where(v => v.Titulo.Contains(palavra) || v.DescricaoVaga.Contains(palavra) || v.Nivel.Contains(palavra))
+                    .ToList();
             }
         }
 
@@ -176,7 +177,7 @@ namespace Talentos.Senai.Repositories
 
         public List<VagaEmprego> FiltrarPorEmpresa(int id)
         {
-            using(TalentosContext ctx = new TalentosContext())
+            using (TalentosContext ctx = new TalentosContext())
             {
                 return ctx.VagaEmprego.Where(v => v.IdEmpresa == id).ToList();
             }

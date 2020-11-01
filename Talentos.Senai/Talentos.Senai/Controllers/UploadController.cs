@@ -1,12 +1,11 @@
 ﻿using System;
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Talentos.Senai.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Talentos.Senai.Utilities;
 using Microsoft.AspNetCore.Http;
 using Talentos.Senai.Interfaces;
+using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
@@ -23,14 +22,14 @@ namespace Talentos.Senai.Controllers
             _functions = new Functions();
         }
 
-        [Authorize(Roles = "1, 2, 3")]
+        [Authorize(Roles = Users.Student + "," + Users.Company)]
         [HttpPost]
         public IActionResult UploadImage()
         {
             var token = Request.Headers["Authorization"][0].Split(" ")[1];
             string jtiUser = _functions.GetClaimInBearerToken(token, "jti");
             string roleUser = _functions.GetClaimInBearerToken(token, "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
-            string nameFolder = roleUser == "2" ? "StudentImages" : "CompanyImages";
+            string nameFolder = roleUser == Users.Student ? "StudentImages" : "CompanyImages";
 
             IFormFile file = Request.Form.Files[0];
             TypeMessage uploadRepository = _uploadImagesRepository.SaveImage(file, nameFolder);
@@ -48,6 +47,5 @@ namespace Talentos.Senai.Controllers
             }
             else return BadRequest(uploadRepository);
         }
-
     }
 }
