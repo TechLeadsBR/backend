@@ -179,7 +179,7 @@ namespace Talentos.Senai.Repositories
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                return ctx.VagaEmprego.Where(v => v.IdEmpresa == id).ToList();
+                return ctx.VagaEmprego.Where(v => v.IdEmpresa == id).Include(v => v.IdEmpresaNavigation).ToList();
             }
         }
     }

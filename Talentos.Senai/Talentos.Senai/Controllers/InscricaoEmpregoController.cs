@@ -13,6 +13,7 @@ using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
@@ -42,7 +43,7 @@ namespace Talentos.Senai.Controllers
         /// <summary>
         /// Cadastra uma Inscricao de Emprego
         /// </summary>
-        [Authorize(Roles = Users.All)]
+        [Authorize(Roles = Users.Student)]
         [HttpPost]
         public IActionResult Post(InscricaoEmprego data)
         {
