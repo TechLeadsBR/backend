@@ -25,14 +25,22 @@ namespace Talentos.Senai.Repositories
 
         }
 
-        public List<InscricaoEmprego> Listar(int jti)
+        public List<InscricaoEmprego> Listar(int jti, string roleUser)
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                return ctx.InscricaoEmprego
-                    .Include(a => a.IdVagaEmpregoNavigation.IdEmpresaNavigation)
-                    .Where(a => a.IdAluno == jti)
-                    .ToList();
+                if(roleUser == Users.Administrator)
+                {
+                    return ctx.InscricaoEmprego
+                        .Include(a => a.IdVagaEmpregoNavigation.IdEmpresaNavigation)
+                        .ToList();
+                }else
+                {
+                    return ctx.InscricaoEmprego
+                        .Include(a => a.IdVagaEmpregoNavigation.IdEmpresaNavigation)
+                        .Where(a => a.IdAluno == jti)
+                        .ToList();
+                }
             }
         }
 

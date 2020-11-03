@@ -37,7 +37,8 @@ namespace Talentos.Senai.Controllers
         {
             string token = HttpContext.Request.Headers["Authorization"][0].Split(" ")[1];
             string jti = _functions.GetClaimInBearerToken(token, "jti");
-            return Ok(_inscricaoEmpregoRepository.Listar(Convert.ToInt32(jti)));
+            string role = _functions.GetClaimInBearerToken(token, "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
+            return Ok(_inscricaoEmpregoRepository.Listar(Convert.ToInt32(jti), role));
         }
 
         /// <summary>

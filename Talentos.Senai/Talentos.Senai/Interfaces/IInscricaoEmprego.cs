@@ -8,7 +8,7 @@ namespace Talentos.Senai.Interfaces
 {
     interface IInscricaoEmprego
     {
-        List<InscricaoEmprego> Listar(int jti);
+        List<InscricaoEmprego> Listar(int jti, string roleUser);
 
         InscricaoEmprego BuscarporIdAlunoeVagaEmprego(int idAluno, int idVagaEmprego);
 
