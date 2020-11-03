@@ -5,7 +5,6 @@ using System.Net.Http.Headers;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Utilities;
-using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Repositories
 {

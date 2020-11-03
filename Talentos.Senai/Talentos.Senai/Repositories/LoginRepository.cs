@@ -29,7 +29,7 @@ namespace Talentos.Senai.Repositories
             {
                 try
                 {
-                    Aluno alunoBuscado = ctx.Aluno.FirstOrDefault(a => a.Email == data.email && a.Senha == data.senha);
+                    Aluno alunoBuscado = ctx.Aluno.FirstOrDefault(a => a.Email == data.Email && a.Senha == data.Senha);
 
                     if (alunoBuscado != null)
                     {
@@ -54,7 +54,7 @@ namespace Talentos.Senai.Repositories
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                Empresa empresaBuscada = ctx.Empresa.FirstOrDefault(e => e.Email == data.email && e.Senha == data.senha);
+                Empresa empresaBuscada = ctx.Empresa.FirstOrDefault(e => e.Email == data.Email && e.Senha == data.Senha);
 
                 if (empresaBuscada != null)
                 {
@@ -72,7 +72,7 @@ namespace Talentos.Senai.Repositories
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                Administrador administradorBuscado = ctx.Administrador.FirstOrDefault(a => a.Email == data.email && a.Senha == data.senha);
+                Administrador administradorBuscado = ctx.Administrador.FirstOrDefault(a => a.Email == data.Email && a.Senha == data.Senha);
                 if (administradorBuscado != null)
                 {
                     var token = CreateToken(administradorBuscado.Email, administradorBuscado.IdAdministrador.ToString(), administradorBuscado.IdTipoUsuario.ToString());

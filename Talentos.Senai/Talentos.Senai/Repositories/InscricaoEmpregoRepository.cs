@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Talentos.Senai.Domains;
 using Talentos.Senai.Interfaces;
 using Talentos.Senai.Utilities;
+using Talentos.Senai.ViewModels;
 
 namespace Talentos.Senai.Repositories
 {
@@ -31,10 +32,9 @@ namespace Talentos.Senai.Repositories
             {
                 if(roleUser == Users.Administrator)
                 {
-                    return ctx.InscricaoEmprego
-                        .Include(a => a.IdVagaEmpregoNavigation.IdEmpresaNavigation)
-                        .ToList();
-                }else
+                    return ctx.InscricaoEmprego.ToList();
+                }
+                else
                 {
                     return ctx.InscricaoEmprego
                         .Include(a => a.IdVagaEmpregoNavigation.IdEmpresaNavigation)

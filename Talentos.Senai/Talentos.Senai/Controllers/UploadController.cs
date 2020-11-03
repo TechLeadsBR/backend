@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Talentos.Senai.Utilities;
 using Microsoft.AspNetCore.Http;
 using Talentos.Senai.Interfaces;
-using Talentos.Senai.Utilities;
 
 namespace Talentos.Senai.Controllers
 {
