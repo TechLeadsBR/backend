@@ -85,7 +85,8 @@ namespace Talentos.Senai.Repositories
                         ctx.SaveChanges();
 
                         string okMessage = _functions.defaultMessage(table, "ok");
-                        return _functions.replyObject(okMessage, true);
+
+                        return _functions.replyObject(okMessage + " " + novoEndereco.IdEndereco, true);
                     }
                     catch (Exception error)
                     {
