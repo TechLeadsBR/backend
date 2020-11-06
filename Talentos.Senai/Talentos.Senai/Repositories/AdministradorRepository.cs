@@ -25,7 +25,12 @@ namespace Talentos.Senai.Repositories
             using(TalentosContext ctx = new TalentosContext())
             {
                 return ctx.Administrador
-                    .Include(a => a.IdTipoUsuarioNavigation)
+                    .Select(a => new Administrador { 
+                        Cpf = a.Cpf,
+                        Email = a.Email,
+                        Nome = a.Nome,
+                        IdAdministrador = a.IdAdministrador
+                    })
                     .ToList();
             }
         }
