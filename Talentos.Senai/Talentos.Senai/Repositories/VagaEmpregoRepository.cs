@@ -99,7 +99,7 @@ namespace Talentos.Senai.Repositories
 
                 if (vagaBuscada != null)
                 {
-                    Empresa empresaBuscada = _empresaRepository.BuscarPorId(data.IdEmpresa.GetValueOrDefault());
+                    Empresa empresaBuscada = _empresaRepository.BuscarPorId(vagaBuscada.IdEmpresa.GetValueOrDefault());
 
                     if (empresaBuscada != null)
                     {
