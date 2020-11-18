@@ -44,7 +44,9 @@ namespace Talentos.Senai.Repositories
         {
             using (TalentosContext ctx = new TalentosContext())
             {
-                return ctx.VagaEmprego.Where(v => v.Titulo.Contains(palavra) || v.DescricaoVaga.Contains(palavra) || v.Nivel.Contains(palavra))
+                return ctx.VagaEmprego
+                    .Include(v => v.IdEmpresaNavigation)
+                    .Where(v => v.Titulo.Contains(palavra) || v.DescricaoVaga.Contains(palavra) || v.Nivel.Contains(palavra))
                     .ToList();
             }
         }
